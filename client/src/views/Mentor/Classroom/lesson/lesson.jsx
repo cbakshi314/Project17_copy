@@ -41,8 +41,9 @@ export default function lesson({ classroomId }) {
         settc(e.target.value);
       }
 
-      submit(){
+      handleSubmit= (e) =>{
         // send info to backend
+        console.log("submited");
       }
 
   return (
@@ -53,7 +54,7 @@ export default function lesson({ classroomId }) {
       <div id='c_lesson'>
         <h3>Creating lesson for <strong>{classroom.name}</strong></h3>
         <hr />
-      <form onSubmit={submit}>
+      <form onSubmit={handleSubmit}>
             <div className='fst'>
                 <h4>STANDARDS:</h4>
                 <input className='textbox' type="text" name='standards' onChange={updateS} />

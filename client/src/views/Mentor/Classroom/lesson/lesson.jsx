@@ -11,6 +11,11 @@ export default function lesson({ classroomId }) {
     const [makingComponents, setMakingComponents] = useState([])
     const [computationComponents, setComputationComponents] = useState([])
 
+    const [standardsValue, setStandardsValue] = useState('');
+    const [descriptionValue, setDescriptionValue] = useState('');
+    const [tc, settc] = useState('');
+
+
     useEffect(() => {
         const fetchData = async () => {
           const res = await getClassroom(classroomId);
@@ -24,6 +29,22 @@ export default function lesson({ classroomId }) {
         fetchData();
       }, [classroomId]);
 
+      updateS = (e) =>{
+        setStandardsValue(e.target.value);
+      }
+
+      updateD= (e) =>{
+        setDescriptionValue(e.target.value);
+      }
+
+      updateTC= (e) =>{
+        settc(e.target.value);
+      }
+
+      submit(){
+        // send info to backend
+      }
+
   return (
     <div className='all'>
     <MentorSubHeader
@@ -32,18 +53,18 @@ export default function lesson({ classroomId }) {
       <div id='c_lesson'>
         <h3>Creating lesson for <strong>{classroom.name}</strong></h3>
         <hr />
-      <form action="">
+      <form onSubmit={submit}>
             <div className='fst'>
                 <h4>STANDARDS:</h4>
-                <input className='textbox' type="text" name='standards' />
+                <input className='textbox' type="text" name='standards' onChange={updateS} />
             </div>
             <div className='fst'>
                 <h4>Description:</h4>
-                <textarea className='dtextbox' type="text" name='description'/>
+                <textarea className='dtextbox' type="text" name='description' onChange={update}/>
             </div>
             <div className='fst'>
                 <h4>Table Chart:</h4>
-                <textarea className='dtextbox' placeholder='Enter Image URL' type="text" name='description'/>
+                <textarea className='dtextbox' placeholder='Enter Image URL' type="text" name='description' onChange={}/>
             </div>
             <hr />
             <h3>Lesson Material</h3>

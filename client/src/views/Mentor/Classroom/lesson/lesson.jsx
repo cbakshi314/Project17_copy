@@ -29,19 +29,19 @@ export default function lesson({ classroomId }) {
         fetchData();
       }, [classroomId]);
 
-      updateS = (e) =>{
+      const updateS = (e) =>{
         setStandardsValue(e.target.value);
-      }
+      };
 
-      updateD= (e) =>{
+      const updateD= (e) =>{
         setDescriptionValue(e.target.value);
-      }
+      };
 
-      updateTC= (e) =>{
+      const updateTC= (e) =>{
         settc(e.target.value);
-      }
+      };
 
-      handleSubmit= (e) =>{
+      const handleSubmit= (e) =>{
         // send info to backend
         console.log("submited");
       }
@@ -57,15 +57,15 @@ export default function lesson({ classroomId }) {
       <form onSubmit={handleSubmit}>
             <div className='fst'>
                 <h4>STANDARDS:</h4>
-                <input className='textbox' type="text" name='standards' onChange={updateS} />
+                <input className='textbox' type="text" name='standards' onChange={updateS} value={standardsValue} />
             </div>
             <div className='fst'>
                 <h4>Description:</h4>
-                <textarea className='dtextbox' type="text" name='description' onChange={update}/>
+                <textarea className='dtextbox' type="text" name='description' onChange={updateD} value={descriptionValue}/>
             </div>
             <div className='fst'>
                 <h4>Table Chart:</h4>
-                <textarea className='dtextbox' placeholder='Enter Image URL' type="text" name='description' onChange={}/>
+                <textarea className='dtextbox' placeholder='Enter Image URL' type="text" name='description' onChange={updateTC} value={tc}/>
             </div>
             <hr />
             <h3>Lesson Material</h3>

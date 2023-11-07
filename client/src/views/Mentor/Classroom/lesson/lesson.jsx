@@ -42,7 +42,7 @@ export default function lesson({ classroomId }) {
       }
 
       submit(){
-        // send info to backend
+        console.log("submited");
       }
 
   return (

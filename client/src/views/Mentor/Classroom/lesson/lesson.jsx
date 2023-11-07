@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { message } from "antd"
 import ActivityComponentTags from "../../../ContentCreator/ActivityEditor/components/ActivityComponentTags"
 import './lesson.less';
-import {getClassroom} from '../../../../Utils/requests';
+import {getClassroom, getUnits} from '../../../../Utils/requests';
 import MentorSubHeader from '../../../../components/MentorSubHeader/MentorSubHeader';
 
 export default function lesson({ classroomId }) {
@@ -10,11 +10,13 @@ export default function lesson({ classroomId }) {
     const [scienceComponents, setScienceComponents] = useState([])
     const [makingComponents, setMakingComponents] = useState([])
     const [computationComponents, setComputationComponents] = useState([])
+    const [unitValue, setUnitValue] = useState(0);
 
     const [standardsValue, setStandardsValue] = useState('');
     const [descriptionValue, setDescriptionValue] = useState('');
     const [tc, settc] = useState('');
 
+    const selector  = document.getElementsByName('unitSelection');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -22,26 +24,61 @@ export default function lesson({ classroomId }) {
           if (res.data) {
             const classroom = res.data;
             setClassroom(classroom);
+            
           } else {
             message.error(res.err);
           }
+
         };
         fetchData();
       }, [classroomId]);
 
-      updateS = (e) =>{
+      useEffect(() => {
+        if (classroom.grade && classroom.grade.id) {
+          const fetchUnits = async () => {
+            try {
+              const res = await getUnits(classroom.grade.id);
+              if (res.data) {
+                for(const x in res.data){
+                    var unit = res.data[x];
+                    let optionElement = document.createElement('option');
+                    optionElement.value = unit.name;
+                    optionElement.text = unit.name;
+                    selector[0].appendChild(optionElement);
+                }
+              } else {
+                message.error(res.err);
+              }
+            } catch (error) {
+              console.error("Error fetching units:", error);
+            }
+          };
+          fetchUnits();
+        }
+      }, [classroom.grade]);
+
+      const updateS = (e) =>{
         setStandardsValue(e.target.value);
-      }
+      };
 
-      updateD= (e) =>{
+      const updateD= (e) =>{
         setDescriptionValue(e.target.value);
-      }
+      };
 
-      updateTC= (e) =>{
+      const updateTC= (e) =>{
         settc(e.target.value);
-      }
+      };
 
-      submit(){
+
+      const updateUnit = (e) => {
+        const selectedUnit = e.target.value;
+        // Save the selected unit to state
+        setUnitValue(selectedUnit);
+      };
+      
+
+      const handleSubmit= (e) =>{
+        // send info to backend
         console.log("submited");
       }
 
@@ -53,18 +90,24 @@ export default function lesson({ classroomId }) {
       <div id='c_lesson'>
         <h3>Creating lesson for <strong>{classroom.name}</strong></h3>
         <hr />
-      <form onSubmit={submit}>
+      <form onSubmit={handleSubmit}>
+            <div className='fst'>
+                <h4>Unit: </h4>                
+                <select name="unitSelection" id="units" onChange={updateUnit} value={unitValue}>
+                </select>
+
+            </div>
             <div className='fst'>
                 <h4>STANDARDS:</h4>
-                <input className='textbox' type="text" name='standards' onChange={updateS} />
+                <input className='textbox' type="text" name='standards' onChange={updateS} value={standardsValue} />
             </div>
             <div className='fst'>
                 <h4>Description:</h4>
-                <textarea className='dtextbox' type="text" name='description' onChange={update}/>
+                <textarea className='dtextbox' type="text" name='description' onChange={updateD} value={descriptionValue}/>
             </div>
             <div className='fst'>
                 <h4>Table Chart:</h4>
-                <textarea className='dtextbox' placeholder='Enter Image URL' type="text" name='description' onChange={}/>
+                <textarea className='dtextbox' placeholder='Enter Image URL' type="text" name='description' onChange={updateTC} value={tc}/>
             </div>
             <hr />
             <h3>Lesson Material</h3>

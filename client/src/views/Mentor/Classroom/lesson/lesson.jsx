@@ -7,14 +7,17 @@ import MentorSubHeader from '../../../../components/MentorSubHeader/MentorSubHea
 
 export default function lesson({ classroomId }) {
     const [classroom, setClassroom] = useState({});
-    const [units, setUnits] = useState({});
     const [scienceComponents, setScienceComponents] = useState([])
     const [makingComponents, setMakingComponents] = useState([])
     const [computationComponents, setComputationComponents] = useState([])
+    const [unitValue, setUnitValue] = useState(0);
 
     const [standardsValue, setStandardsValue] = useState('');
     const [descriptionValue, setDescriptionValue] = useState('');
     const [tc, settc] = useState('');
+
+    const selector  = document.getElementsByName('unitSelection');
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -37,14 +40,12 @@ export default function lesson({ classroomId }) {
             try {
               const res = await getUnits(classroom.grade.id);
               if (res.data) {
-                const selector  = document.getElementsByName('unitSelection')[0];
-
                 for(const x in res.data){
                     var unit = res.data[x];
                     let optionElement = document.createElement('option');
                     optionElement.value = unit.name;
                     optionElement.text = unit.name;
-                    selector.appendChild(optionElement);
+                    selector[0].appendChild(optionElement);
                 }
               } else {
                 message.error(res.err);
@@ -69,6 +70,14 @@ export default function lesson({ classroomId }) {
         settc(e.target.value);
       };
 
+
+      const updateUnit = (e) => {
+        const selectedUnit = e.target.value;
+        // Save the selected unit to state
+        setUnitValue(selectedUnit);
+      };
+      
+
       const handleSubmit= (e) =>{
         // send info to backend
         console.log("submited");
@@ -85,7 +94,7 @@ export default function lesson({ classroomId }) {
       <form onSubmit={handleSubmit}>
             <div className='fst'>
                 <h4>Unit: </h4>                
-                <select name="unitSelection" id="units">
+                <select name="unitSelection" id="units" onChange={updateUnit} value={unitValue}>
                 </select>
 
             </div>

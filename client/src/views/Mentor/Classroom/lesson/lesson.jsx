@@ -18,7 +18,6 @@ export default function lesson({ classroomId }) {
 
     const selector  = document.getElementsByName('unitSelection');
 
-
     useEffect(() => {
         const fetchData = async () => {
           const res = await getClassroom(classroomId);

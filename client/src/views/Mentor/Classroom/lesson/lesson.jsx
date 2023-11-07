@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { message } from "antd"
 import ActivityComponentTags from "../../../ContentCreator/ActivityEditor/components/ActivityComponentTags"
 import './lesson.less';
-import {getClassroom} from '../../../../Utils/requests';
+import {getClassroom, getUnits} from '../../../../Utils/requests';
 import MentorSubHeader from '../../../../components/MentorSubHeader/MentorSubHeader';
 
 export default function lesson({ classroomId }) {
     const [classroom, setClassroom] = useState({});
+    const [units, setUnits] = useState({});
     const [scienceComponents, setScienceComponents] = useState([])
     const [makingComponents, setMakingComponents] = useState([])
     const [computationComponents, setComputationComponents] = useState([])
@@ -15,19 +16,46 @@ export default function lesson({ classroomId }) {
     const [descriptionValue, setDescriptionValue] = useState('');
     const [tc, settc] = useState('');
 
-
     useEffect(() => {
         const fetchData = async () => {
           const res = await getClassroom(classroomId);
           if (res.data) {
             const classroom = res.data;
             setClassroom(classroom);
+            
           } else {
             message.error(res.err);
           }
+
         };
         fetchData();
       }, [classroomId]);
+
+      useEffect(() => {
+        if (classroom.grade && classroom.grade.id) {
+          const fetchUnits = async () => {
+            try {
+              const res = await getUnits(classroom.grade.id);
+              if (res.data) {
+                const selector  = document.getElementsByName('unitSelection')[0];
+
+                for(const x in res.data){
+                    var unit = res.data[x];
+                    let optionElement = document.createElement('option');
+                    optionElement.value = unit.name;
+                    optionElement.text = unit.name;
+                    selector.appendChild(optionElement);
+                }
+              } else {
+                message.error(res.err);
+              }
+            } catch (error) {
+              console.error("Error fetching units:", error);
+            }
+          };
+          fetchUnits();
+        }
+      }, [classroom.grade]);
 
       const updateS = (e) =>{
         setStandardsValue(e.target.value);
@@ -55,6 +83,12 @@ export default function lesson({ classroomId }) {
         <h3>Creating lesson for <strong>{classroom.name}</strong></h3>
         <hr />
       <form onSubmit={handleSubmit}>
+            <div className='fst'>
+                <h4>Unit: </h4>                
+                <select name="unitSelection" id="units">
+                </select>
+
+            </div>
             <div className='fst'>
                 <h4>STANDARDS:</h4>
                 <input className='textbox' type="text" name='standards' onChange={updateS} value={standardsValue} />

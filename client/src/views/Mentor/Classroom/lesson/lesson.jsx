@@ -91,11 +91,10 @@ export default function lesson({ classroomId }) {
         <h3>Creating lesson for <strong>{classroom.name}</strong></h3>
         <hr />
       <form onSubmit={handleSubmit}>
-            <div className='fst'>
+            <div className='selection'>
                 <h4>Unit: </h4>                
                 <select name="unitSelection" id="units" onChange={updateUnit} value={unitValue}>
                 </select>
-
             </div>
             <div className='fst'>
                 <h4>STANDARDS:</h4>

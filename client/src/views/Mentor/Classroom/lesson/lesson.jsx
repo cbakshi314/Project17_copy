@@ -97,7 +97,7 @@ export default function lesson({ classroomId }) {
         title={'Create Lesson'}
       />
       <div id='c_lesson'>
-        <h3>Creating lesson for <strong>{classroom.name}</strong></h3>
+        <h3>Create lesson for <strong>{classroom.name}</strong></h3>
         <hr />
       <form onSubmit={handleSubmit}>
             <div className='selection'>

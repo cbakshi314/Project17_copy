@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './unitCreation.less';
+import { message } from "antd"
 import {getClassroom} from '../../../../Utils/requests';
 import MentorSubHeader from '../../../../components/MentorSubHeader/MentorSubHeader';
 
@@ -24,12 +25,17 @@ export default function unitCreation({ classroomId }) {
 
       const updateName = (e) => {
         setNewUnitName(e.target.value)
-        console.log(e.target.value)
       }
 
-      function handleSubmit(){
+      function handleSubmit(event){
+        event.preventDefault()
         // send info to backend
-        console.error("test");
+
+        // success message
+        message.success(`New Unit "${newUnitName}" was succesfully created`);
+
+        // refresh everything
+        setNewUnitName("");
 
       }
 
@@ -42,12 +48,11 @@ export default function unitCreation({ classroomId }) {
         <h3>Creating lesson for <strong>{classroom.name}</strong></h3>
         <hr />
       <form onSubmit={handleSubmit}>
-        <div>
+        <div className='fst'>
             <h4> Unit Name: </h4>
-            <input type="text" onChange={updateName} value={newUnitName}/>
-            <input type="submit" />
+            <input className='textbox' type="text" onChange={updateName} value={newUnitName}/>
         </div>
-
+        <input className='submitbtn' type="submit" value={"Create Unit"} />
         </form>
       </div>
     </div>);

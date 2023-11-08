@@ -7,11 +7,11 @@ import MentorSubHeader from '../../../../components/MentorSubHeader/MentorSubHea
 
 export default function lesson({ classroomId }) {
     const [classroom, setClassroom] = useState({});
+    
     const [scienceComponents, setScienceComponents] = useState([])
     const [makingComponents, setMakingComponents] = useState([])
     const [computationComponents, setComputationComponents] = useState([])
-    const [unitValue, setUnitValue] = useState(0);
-
+    const [unitValue, setUnitValue] = useState("");
     const [standardsValue, setStandardsValue] = useState('');
     const [descriptionValue, setDescriptionValue] = useState('');
     const [tc, settc] = useState('');
@@ -72,14 +72,23 @@ export default function lesson({ classroomId }) {
 
       const updateUnit = (e) => {
         const selectedUnit = e.target.value;
+        console.log(unitValue)
         // Save the selected unit to state
         setUnitValue(selectedUnit);
       };
       
 
-      const handleSubmit= (e) =>{
+      function handleSubmit(event){
+        event.preventDefault();
+
+        console.log(unitValue)
+
+        message.success(`"${standardsValue}" was successfuly created for ${unitValue}`)
+
         // send info to backend
-        console.log("submited");
+
+        // clear Form
+
       }
 
   return (

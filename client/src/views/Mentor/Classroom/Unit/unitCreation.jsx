@@ -45,7 +45,7 @@ export default function unitCreation({ classroomId }) {
         title={'Create Unit'}
       />
       <div id='c_lesson'>
-        <h3>Creating lesson for <strong>{classroom.name}</strong></h3>
+        <h3>Create Unit for <strong>{classroom.name}</strong></h3>
         <hr />
       <form onSubmit={handleSubmit}>
         <div className='fst'>

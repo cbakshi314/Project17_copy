@@ -31,6 +31,7 @@ export default function Home({ classroomId, viewing }) {
         const classroom = res.data;
         setClassroom(classroom);
         setGradeId(classroom.grade.id);
+        console.log(classroom)
         classroom.selections.forEach(async (selection) => {
           if (selection.current) {
             const lsRes = await getLessonModule(

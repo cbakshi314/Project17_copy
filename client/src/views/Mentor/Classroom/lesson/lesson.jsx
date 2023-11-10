@@ -132,7 +132,7 @@ export default function lesson({ classroomId }) {
       <div id='c_lesson'>
         <h3>Create lesson for <strong>{classroom.name}</strong></h3>
         <hr />
-      <form>
+      <form onSubmit={saveLesson}>
             <div className='selection'>
                 <h4>Unit: </h4>                
                 <select name="unitSelection" id="units" onChange={updateUnit} value={unitValue}>
@@ -161,7 +161,7 @@ export default function lesson({ classroomId }) {
                 <h4>Additional Info:</h4>
                 <input className='textbox' type="text" name='standards' placeholder='Enter a Link' onChange={updateAI} value={additionalInfo}/>
             </div>
-            <input className='submitbtn' onClick={saveLesson} type='submit' value={"Create Lesson"}/>
+            <input className='submitbtn' type='submit' value={"Create Lesson"}/>
         </form>
       </div>
     </div>

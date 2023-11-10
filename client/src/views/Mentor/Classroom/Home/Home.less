@@ -106,22 +106,57 @@
 
     #change-lesson-btn {
       width: auto;
-      height: 2.5vh;
-      font-size: 0.8em;
-      font-weight: 600;
+      height: fit-content;
+      padding-block: 6px;
+      font-size: 0.9em;
+      font-weight: 800;
       border: none;
       color: #colors[text-primary];
       background: #colors[quaternary];
-      border-radius: 30px;
+      border-radius: 10px;
       transition: 0.25s;
       cursor: pointer;
 
       &:hover {
         background: #colors[quinary];
+        color: white;
       }
       #test {
         display: flex;
         justify-content: right;
+        margin: auto;
+      }
+    }
+
+    @keyframes shake {
+      0%{
+        margin-left: 10px;
+      }
+      50%{
+        margin-left: 13px;
+      }
+      100%{
+        margin-left: 10px;
+      }
+    }
+
+    #delete-lesson{
+      background-color: rgb(209, 39, 39);
+      border: 1px solid transparent;
+      position: fixed;
+      font-size: 0.9em;
+      padding-block: 6px;
+      color: white;
+      font-weight: 800;
+      margin-left: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 500ms;
+
+      &:hover {
+        background-color: rgb(185, 34, 34);
+        animation: shake forwards 200ms infinite;
+        padding: 10px;
       }
     }
   }

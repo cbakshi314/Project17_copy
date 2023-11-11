@@ -34,4 +34,4 @@ build/
 server/public/client/*
 !server/public/client/.gitkeep
 
-.client/package-lock.json
+client/package-lock.json

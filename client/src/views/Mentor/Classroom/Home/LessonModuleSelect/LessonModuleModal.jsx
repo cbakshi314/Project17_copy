@@ -1,10 +1,12 @@
-import { Modal, Button, message } from 'antd';
+import { Modal, Button, message, Popconfirm } from 'antd';
 import React, { useEffect, useState } from 'react';
 import LessonModuleSelect from './LessonModuleSelect';
 import {
   getLessonModule,
   setSelection,
   getLessonModuleActivities,
+  deleteLessonModule,
+  createActivity,
 } from '../../../../../Utils/requests';
 import { useSearchParams } from 'react-router-dom';
 
@@ -72,17 +74,18 @@ export default function LessonModuleModal({
   };
 
   const deleteLesson = async () =>{
-    // delete lesson
-
-
-
-
-
-
-
-
-
+    const res  = await deleteLessonModule(selected.id)
+    if(res.data){
+      message.success(`'${selected.name}' has been deleted`)
+    }
+    else{
+      message.error(`Could not delete '${selected.name}'`)
+    }
   };
+
+  const addActivity = async () =>{
+    const res = await createActivity
+  }
 
   return (
     <div id='lesson-module-modal'>
@@ -121,7 +124,15 @@ export default function LessonModuleModal({
           setActivities={setSelectedActivities}
         />
       </Modal>
-      <button id='delete-lesson' onClick={deleteLesson}>Delete Lesson</button>
+      {/* add avtivty button has not been implemented yet */}
+      <button id='add-activity'>+ Activity</button>
+      <Popconfirm
+          title='This action is NOT reversible'
+          onConfirm={() => { deleteLesson()
+              }}
+            >
+      <button id='delete-lesson'>Delete Lesson</button>
+      </Popconfirm>
     </div>
   );
 }

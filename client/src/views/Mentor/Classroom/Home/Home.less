@@ -128,18 +128,6 @@
       }
     }
 
-    @keyframes shake {
-      0%{
-        margin-left: 10px;
-      }
-      50%{
-        margin-left: 13px;
-      }
-      100%{
-        margin-left: 10px;
-      }
-    }
-
     #delete-lesson{
       background-color: rgb(209, 39, 39);
       border: 1px solid transparent;
@@ -155,11 +143,21 @@
 
       &:hover {
         background-color: rgb(185, 34, 34);
-        animation: shake forwards 200ms infinite;
-        padding: 10px;
       }
     }
+    #add-activity{
+      background-color: rgb(98, 172, 222);
+      border: 1px solid transparent;
+      font-size: 0.9em;
+      padding-block: 6px;
+      color: white;
+      font-weight: 800;
+      margin-left: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
   }
+
 }
 
 #display-code-modal {

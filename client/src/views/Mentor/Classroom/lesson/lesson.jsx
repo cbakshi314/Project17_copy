@@ -108,7 +108,7 @@ export default function lesson({ classroomId }) {
           const res = await createLessonModule(descriptionValue, name, 2, unit, standardsValue, additionalInfo)
           console.log(res.data);
           if(res.data){
-            message.success(`"${standardsValue}" was successfuly created for ${unitValue}`);
+            message.success(`"${name}" was successfuly created for ${unitValue}`);
   
             // clear Form
             clearForm();

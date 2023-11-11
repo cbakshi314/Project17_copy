@@ -72,6 +72,7 @@ export default function LessonModuleModal({
   };
 
   const deleteLesson = async () =>{
+    // delete lesson
 
 
 
@@ -81,7 +82,6 @@ export default function LessonModuleModal({
 
 
 
-    
   };
 
   return (

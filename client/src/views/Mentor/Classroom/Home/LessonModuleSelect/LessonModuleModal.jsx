@@ -71,6 +71,19 @@ export default function LessonModuleModal({
     setActivePanel('panel-2');
   };
 
+  const deleteLesson = async () =>{
+
+
+
+
+
+
+
+
+
+    
+  };
+
   return (
     <div id='lesson-module-modal'>
       <button id='change-lesson-btn' onClick={showModal}>
@@ -108,6 +121,7 @@ export default function LessonModuleModal({
           setActivities={setSelectedActivities}
         />
       </Modal>
+      <button id='delete-lesson' onClick={deleteLesson}>Delete Lesson</button>
     </div>
   );
 }

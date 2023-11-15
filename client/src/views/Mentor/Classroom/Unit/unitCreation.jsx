@@ -7,6 +7,8 @@ import MentorSubHeader from '../../../../components/MentorSubHeader/MentorSubHea
 export default function unitCreation({ classroomId }) {
     const [classroom, setClassroom] = useState({});
     const [newUnitName, setNewUnitName] = useState("");
+    const [standardID, setStandardID] = useState("");
+    const [standardDescription, setstandardDescription] = useState("");
 
     useEffect(() => {
         const fetchData = async () => {
@@ -14,7 +16,7 @@ export default function unitCreation({ classroomId }) {
           if (res.data) {
             const classroom = res.data;
             setClassroom(classroom);
-            
+            console.log(classroom)
           } else {
             message.error(res.err);
           }
@@ -26,19 +28,30 @@ export default function unitCreation({ classroomId }) {
       const updateName = (e) => {
         setNewUnitName(e.target.value)
       }
-
-      function handleSubmit(event){
-        event.preventDefault()
-        // send info to backend
-
-        // success message
-        message.success(`New Unit "${newUnitName}" was succesfully created`);
-
-        // refresh everything
-        setNewUnitName("");
-
+      const updateStan = (e) =>{
+        setStandardID(e.target.value)
       }
-
+      const updateStanDsc = (e) =>{
+        setstandardDescription(e.target.value)
+      }
+      const handleSubmit = async (e) =>{
+        e.preventDefault();
+        if(unitValue != ""){
+          const res = await createUnit(number, newUnitName, standardsID, standardsDescrip, classroom.grade.name) 
+          if(res.data){
+            message.success(`Unit "${newUnitName}" was successfuly created`);
+  
+            // clear Form
+            clearForm();
+          }
+          else{
+            message.error("Unable to Save");
+          }
+        }
+        else{
+          message.error("Unit not selected");
+        }
+      };
     return(
     <div className='all'>
         <MentorSubHeader
@@ -50,7 +63,15 @@ export default function unitCreation({ classroomId }) {
       <form onSubmit={handleSubmit}>
         <div className='fst'>
             <h4> Unit Name: </h4>
-            <input className='textbox' type="text" onChange={updateName} value={newUnitName}/>
+            <input className='textbox' type="text" onChange={updateName} value={newUnitName} required/>
+        </div>
+        <div className='fst'>
+            <h4> Standards ID: </h4>
+            <input className='textbox' type="text" onChange={updateStan} value={standardID} required/>
+        </div>
+        <div className='fst'>
+            <h4> Standards Description: </h4>
+            <input className='textbox' type="text" onChange={updateStanDsc} value={standardDescription} required/>
         </div>
         <input className='submitbtn' type="submit" value={"Create Unit"} />
         </form>

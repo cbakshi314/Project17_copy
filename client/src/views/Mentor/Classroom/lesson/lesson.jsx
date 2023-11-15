@@ -5,28 +5,22 @@ import './lesson.less';
 import {getClassroom, getUnits, createLessonModule, getUnit} from '../../../../Utils/requests';
 import MentorSubHeader from '../../../../components/MentorSubHeader/MentorSubHeader';
 
+const unitLayout = new Map();
 
-// export function should just be nameed whatever your fileName is
-// Usually there is not input unless it is provided when called
-// In this case 'classroomId' is being sent as input
 export default function lesson({ classroomId }) {
 
   // essentially global variables (where we save the input to on change)
     const [classroom, setClassroom] = useState({});
-    
     const [name, setName ] = useState("");
     const [unitValue, setUnitValue] = useState("");
-    const [standardsValue, setStandardsValue] = useState('');
-    const [descriptionValue, setDescriptionValue] = useState('');
-    const [tc, settc] = useState('');
+    const [standardsValue, setStandardsValue] = useState("");
+    const [descriptionValue, setDescriptionValue] = useState("");
+    const [tc, settc] = useState("");
     const [additionalInfo, setAdditionalInfo ] = useState("");
-    const [unit, setUnit] =useState(null);
-
+    const [unit, setUnit] =useState(null);    
     const selector  = document.getElementsByName('unitSelection');
 
-    // getting data from backend 
-    // useEffect just makes it so that it runs when the website loads
-    // useEffect takes in 2 components (fethcing data call, and neccessary data to call database)
+    // getting data from backend on load
     useEffect(() => {
         const fetchData = async () => {
           const res = await getClassroom(classroomId);
@@ -52,8 +46,8 @@ export default function lesson({ classroomId }) {
               if (res.data) {
                 for(const x in res.data){
                     var unit = res.data[x];
-                    setUnit(unit);
-                    // console.log(unit);
+                    unitLayout.set(unit.name, unit);
+                    setUnit(unit)
                     let optionElement = document.createElement('option');
                     optionElement.value = unit.name;
                     optionElement.text = unit.name;
@@ -88,6 +82,8 @@ export default function lesson({ classroomId }) {
       };
       const updateUnit = (e) => {
         setUnitValue(e.target.value);
+        const sendUnit = unitLayout.get(e.target.value);
+        setUnit(sendUnit);
       };
 
       // clear all global variables
@@ -104,8 +100,9 @@ export default function lesson({ classroomId }) {
       // on submittion do whatever's in here...
       const saveLesson = async (e) =>{
         e.preventDefault();
+        const num = unit.number+1;
         if(unitValue != ""){
-          const res = await createLessonModule(descriptionValue, name, 2, unit, standardsValue, additionalInfo)
+          const res = await createLessonModule(descriptionValue, name , num, unit, standardsValue, additionalInfo)
           if(res.data){
             message.success(`"${name}" was successfuly created for ${unitValue}`);
   
@@ -122,7 +119,6 @@ export default function lesson({ classroomId }) {
       };
 
   // return is what you see on the screen
-  // Think of this as the front frontEnd
   return (
     <div className='all'>
     <MentorSubHeader

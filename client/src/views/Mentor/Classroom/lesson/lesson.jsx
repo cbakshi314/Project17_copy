@@ -46,6 +46,7 @@ export default function lesson({ classroomId }) {
               if (res.data) {
                 for(const x in res.data){
                     var unit = res.data[x];
+                    console.log(unit);
                     unitLayout.set(unit.name, unit);
                     setUnit(unit)
                     let optionElement = document.createElement('option');
@@ -100,7 +101,7 @@ export default function lesson({ classroomId }) {
       // on submittion do whatever's in here...
       const saveLesson = async (e) =>{
         e.preventDefault();
-        const num = unit.number+1;
+        const num = unit.number;
         if(unitValue != ""){
           const res = await createLessonModule(descriptionValue, name , num, unit, standardsValue, additionalInfo)
           if(res.data){

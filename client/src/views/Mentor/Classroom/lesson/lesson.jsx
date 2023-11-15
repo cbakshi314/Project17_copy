@@ -106,7 +106,6 @@ export default function lesson({ classroomId }) {
         e.preventDefault();
         if(unitValue != ""){
           const res = await createLessonModule(descriptionValue, name, 2, unit, standardsValue, additionalInfo)
-          console.log(res.data);
           if(res.data){
             message.success(`"${name}" was successfuly created for ${unitValue}`);
   

@@ -9,6 +9,7 @@ export default function unitCreation({ classroomId }) {
     const [newUnitName, setNewUnitName] = useState("");
     const [standardID, setStandardID] = useState("");
     const [standardDescription, setstandardDescription] = useState("");
+    const [number, setNumber] = useState(1);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -34,6 +35,15 @@ export default function unitCreation({ classroomId }) {
       const updateStanDsc = (e) =>{
         setstandardDescription(e.target.value)
       }
+      const updateNumber = (e) =>{
+        const input = e.target.value;
+
+        if (/^-?\d*$/.test(input)) {
+          setNumber(input);
+        }
+    
+      }
+
       const handleSubmit = async (e) =>{
         e.preventDefault();
         if(unitValue != ""){
@@ -72,6 +82,10 @@ export default function unitCreation({ classroomId }) {
         <div className='fst'>
             <h4> Standards Description: </h4>
             <input className='textbox' type="text" onChange={updateStanDsc} value={standardDescription} required/>
+        </div>
+        <div className='fst'>
+            <h4>Unit Number: </h4>
+            <input className='textbox' type="number" onChange={updateNumber} value={number} required/>
         </div>
         <input className='submitbtn' type="submit" value={"Create Unit"} />
         </form>

@@ -145,7 +145,11 @@
 }
 
 #share {
-  width: 15vw;
+  width: auto;
+  display: grid;
+  grid-template-columns: auto 1px;
+  gap: 10px;
+  padding-inline: 16px;
   border-radius: 10px;
   margin-block: auto;
   margin-left: 5vw;
@@ -159,7 +163,22 @@
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.377);
 
   &:hover {
-    width: 17vw;
-    background-color:whitesmoke;
+    background-color:rgb(236, 236, 236);
+  }
+  .banner{
+    display: ;
+    position: relative;
+    background-color: red;
+    text-align: center;
+    justify-content: center;
+    margin-top: -10px;
+    border-radius: 20px;
+    color: white;
+    width: 2vw;
+    height: 2vw;
+    font-size: 1.3vw;
+  }
+  .banner p{
+    margin-inline:auto;
   }
 }

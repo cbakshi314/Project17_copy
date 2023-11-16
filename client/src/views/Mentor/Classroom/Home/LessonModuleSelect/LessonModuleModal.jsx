@@ -24,13 +24,13 @@ export default function LessonModuleModal({
   const [activePanel, setActivePanel] = useState('panel-1');
   const [visible2, setVisible2] = useState(false);
   const [selectedTeacher, setSelectedTeacher] = useState(null);
-
+  const [updated, setUpdated] = useState(false);
   const [selectedActivities, setSelectedActivities] = useState([]);
   const [selected, setSelected] = useState({});
   // eslint-disable-next-line
   const [_, setSearchParams] = useSearchParams();
 
-  const selector = document.getElementById('avilableTeachers');
+  const selector = document.getElementsByName('teacherSelector');
 
 
   useEffect(() => {
@@ -54,28 +54,26 @@ export default function LessonModuleModal({
     fetchData();
   }, [viewing]);
 
-  useEffect(()=>{
-    const fetchTeachers = async () => {
-      console.log(selector);
-      const exclude = JSON.parse(sessionStorage.getItem('user'));
-      const res = await getTeachers();
-      if(res){
-        for(const x in res.data){
-          if(res.data[x].user.email !== exclude.email && res.data[x].user.username !== exclude.username ){
-            var teacher = res.data[x];
-            if(selectedTeacher == null){
-              setSelectedTeacher(teacher);
-            }
-            teacherLayout.set(teacher.last_name, teacher);
-            let optionElement = document.createElement('option');
-            optionElement.value = teacher.last_name;
-            optionElement.text = `${teacher.last_name}, ${teacher.first_name}`;
-            selector.appendChild(optionElement);
+  const fetchTeachers = async () => {
+    const exclude = JSON.parse(sessionStorage.getItem('user'));
+    const res = await getTeachers();
+    if(res){
+      for(const x in res.data){
+        if(res.data[x].user.email !== exclude.email && res.data[x].user.username !== exclude.username && !updated){
+          var teacher = res.data[x];
+          if(selectedTeacher == null){
+            setSelectedTeacher(teacher);
           }
+          teacherLayout.set(`${teacher.last_name}, ${teacher.first_name}`, teacher);
+          let optionElement = document.createElement('option');
+          optionElement.value = teacher.last_name;
+          optionElement.text = `${teacher.last_name}, ${teacher.first_name}`;
+          selector[0].appendChild(optionElement);
         }
       }
-    };fetchTeachers();
-  },[])
+      setUpdated(true);
+    }
+  };
 
 
   const showModal = () => {

@@ -672,3 +672,14 @@ export const getClassroomWorkspace = async (id) =>
     auth: true,
     error: 'Unable to retrive classroom workspaces',
   });
+
+  export const shareLesson = async (id, lesson) =>
+  makeRequest({
+    method: PUT,
+    path: `${server}/mentor/sharelesson/${id}`,
+    auth: true,
+    data: {
+      lesson
+    },
+    error: 'Unable to send lesson',
+  });

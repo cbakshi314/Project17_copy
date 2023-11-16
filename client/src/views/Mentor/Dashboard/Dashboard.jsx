@@ -11,12 +11,14 @@ import { useNavigate } from 'react-router-dom';
 export default function Dashboard() {
   const [classrooms, setClassrooms] = useState([]);
   const [value] = useGlobalState('currUser');
+  const[inbox, setInbox] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     let classroomIds = [];
     getMentor().then((res) => {
       if (res.data) {
+        setInbox(res.data.inbox);
         res.data.classrooms.forEach((classroom) => {
           classroomIds.push(classroom.id);
         });
@@ -34,10 +36,15 @@ export default function Dashboard() {
     navigate(`/classroom/${classroomId}`);
   };
 
+  const viewInbox = (inbox) => {
+    navigate(`/inbox/${inbox}`);
+  };
+
+
   return (
     <div className='container nav-padding'>
       <NavBar />
-      <div id='main-header'>Welcome {value.name}</div>
+      <div id='main-header'>Welcome {value.name} <button onClick={() => viewInbox(inbox)}> View Inbox</button> </div>
       <MentorSubHeader title={'Your Classrooms'}></MentorSubHeader>
       <div id='classrooms-container'>
         <div id='dashboard-card-container'>

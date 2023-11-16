@@ -8,6 +8,7 @@
   margin-bottom: 3%;
   text-align: left;
   padding-top: 20px;
+  display: flex;
 }
 
 #classrooms-container {
@@ -140,5 +141,25 @@
       background-color: #colors[quaternary];
       border-bottom-right-radius: 10px;
     }
+  }
+}
+
+#share {
+  width: 15vw;
+  border-radius: 10px;
+  margin-block: auto;
+  margin-left: 5vw;
+  background-color:white;
+  border: none;
+  height: fit-content;
+  font-size: 1.5vw;
+  color: #colors[text-primary];
+  transition: 0.25s;
+  cursor: pointer;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.377);
+
+  &:hover {
+    width: 17vw;
+    background-color:whitesmoke;
   }
 }

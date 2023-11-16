@@ -11,14 +11,16 @@ import { useNavigate } from 'react-router-dom';
 export default function Dashboard() {
   const [classrooms, setClassrooms] = useState([]);
   const [value] = useGlobalState('currUser');
-  const[inbox, setInbox] = useState([]);
+  const[userId, setUserId] = useState([]);
+  const[inboxSize, setInboxSize] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
     let classroomIds = [];
     getMentor().then((res) => {
       if (res.data) {
-        setInbox(res.data.inbox);
+        setUserId(res.data.id);
+        setInboxSize(res.data.inbox.length)
         res.data.classrooms.forEach((classroom) => {
           classroomIds.push(classroom.id);
         });
@@ -36,15 +38,15 @@ export default function Dashboard() {
     navigate(`/classroom/${classroomId}`);
   };
 
-  const viewInbox = (inbox) => {
-    navigate(`/inbox/${inbox}`);
+  const viewInbox = (userId) => {
+    navigate(`/inbox/${userId}`);
   };
 
 
   return (
     <div className='container nav-padding'>
       <NavBar />
-      <div id='main-header'>Welcome {value.name} <button onClick={() => viewInbox(inbox)}> View Inbox</button> </div>
+      <div id='main-header'>Welcome {value.name} <button id='share' onClick={() => viewInbox(userId)}> Shared Lessons <strong>({inboxSize})</strong> </button> </div>
       <MentorSubHeader title={'Your Classrooms'}></MentorSubHeader>
       <div id='classrooms-container'>
         <div id='dashboard-card-container'>

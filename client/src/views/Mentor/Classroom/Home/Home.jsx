@@ -27,6 +27,8 @@ export default function Home({ classroomId, viewing }) {
   useEffect(() => {
     const fetchData = async () => {
       const res = await getClassroom(classroomId);
+      const selector = document.getElementById('avilableTeachers');
+      console.log(sele)
       if (res.data) {
         const classroom = res.data;
         setClassroom(classroom);
@@ -53,6 +55,7 @@ export default function Home({ classroomId, viewing }) {
     };
     fetchData();
   }, [classroomId]);
+  
 
   const handleViewActivity = (activity, name) => {
     activity.lesson_module_name = name;

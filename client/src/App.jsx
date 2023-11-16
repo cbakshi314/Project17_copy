@@ -90,7 +90,7 @@ const App = () => {
           }
         />
           <Route
-          path='/inbox/:id'
+          path='/inbox'
           element={
             <PrivateRoute>
               <Inbox />

@@ -45,7 +45,7 @@ export default function Dashboard() {
   };
 
   const viewInbox = (userId) => {
-    navigate(`/inbox/${userId}`);
+    navigate(`/inbox`);
   };
 
 

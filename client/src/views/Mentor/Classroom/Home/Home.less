@@ -156,9 +156,26 @@
       border-radius: 10px;
       cursor: pointer;
     }
-  }
+    #share-btn{
+      background-color: white;
+      border: 1px solid transparent;
+      height: max-content;
+      font-size: 1em;
+      color: black;
+      font-weight: 800;
+      margin-right: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 500ms;
 
+      &:hover{
+        background-color: black;
+        color:white;
+      }
+    }
+  }
 }
+
 
 #display-code-modal {
   position: absolute;
@@ -215,4 +232,20 @@
       cursor: pointer;
     }
   }
+}
+
+#avilableTeachers{
+  appearance: none;
+  /* safari */
+  -webkit-appearance: none;
+  /* other styles for aesthetics */
+  width: 100%;
+  font-size: 1.15rem;
+  padding: 0.675em 6em 0.675em 1em;
+  background-color: #fff;
+  border: 1px solid #caced1;
+  border-radius: 0.25rem;
+  color: #000;
+  cursor: pointer;
+
 }

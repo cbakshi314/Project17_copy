@@ -53,6 +53,7 @@ export default function Home({ classroomId, viewing }) {
     };
     fetchData();
   }, [classroomId]);
+  
 
   const handleViewActivity = (activity, name) => {
     activity.lesson_module_name = name;

@@ -8,6 +8,7 @@
   margin-bottom: 3%;
   text-align: left;
   padding-top: 20px;
+  display: flex;
 }
 
 #classrooms-container {
@@ -140,5 +141,43 @@
       background-color: #colors[quaternary];
       border-bottom-right-radius: 10px;
     }
+  }
+}
+
+#share {
+  width: auto;
+  display: grid;
+  grid-template-columns: auto 1px;
+  gap: 10px;
+  padding-inline: 16px;
+  border-radius: 10px;
+  margin-block: auto;
+  margin-left: 5vw;
+  background-color:white;
+  border: none;
+  height: fit-content;
+  font-size: 1.5vw;
+  color: #colors[text-primary];
+  transition: 0.25s;
+  cursor: pointer;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.377);
+
+  &:hover {
+    background-color:rgb(236, 236, 236);
+  }
+  .banner{
+    position: relative;
+    background-color: #colors[secondary];
+    text-align: center;
+    justify-content: center;
+    margin-top: -10px;
+    border-radius: 20px;
+    color: white;
+    width: 2vw;
+    height: 2vw;
+    font-size: 1.3vw;
+  }
+  .banner p{
+    margin-inline:auto;
   }
 }

@@ -7,8 +7,11 @@ import {
   getLessonModuleActivities,
   deleteLessonModule,
   createActivity,
+  getTeachers,
 } from '../../../../../Utils/requests';
 import { useSearchParams } from 'react-router-dom';
+
+const teacherLayout = new Map();
 
 export default function LessonModuleModal({
   setActiveLessonModule,
@@ -19,10 +22,16 @@ export default function LessonModuleModal({
 }) {
   const [visible, setVisible] = useState(false);
   const [activePanel, setActivePanel] = useState('panel-1');
+  const [visible2, setVisible2] = useState(false);
+  const [selectedTeacher, setSelectedTeacher] = useState(null);
+  const [updated, setUpdated] = useState(false);
   const [selectedActivities, setSelectedActivities] = useState([]);
   const [selected, setSelected] = useState({});
   // eslint-disable-next-line
   const [_, setSearchParams] = useSearchParams();
+
+  const selector = document.getElementsByName('teacherSelector');
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,14 +54,44 @@ export default function LessonModuleModal({
     fetchData();
   }, [viewing]);
 
+  const fetchTeachers = async () => {
+    const exclude = JSON.parse(sessionStorage.getItem('user'));
+    const res = await getTeachers();
+    if(res){
+      for(const x in res.data){
+        if(res.data[x].user.email !== exclude.email && res.data[x].user.username !== exclude.username && !updated){
+          var teacher = res.data[x];
+          if(selectedTeacher == null){
+            setSelectedTeacher(teacher);
+          }
+          teacherLayout.set(`${teacher.last_name}, ${teacher.first_name}`, teacher);
+          let optionElement = document.createElement('option');
+          optionElement.value = teacher.last_name;
+          optionElement.text = `${teacher.last_name}, ${teacher.first_name}`;
+          selector[0].appendChild(optionElement);
+        }
+      }
+      setUpdated(true);
+    }
+  };
+
+
   const showModal = () => {
     setActivePanel('panel-1');
     setVisible(true);
   };
 
+  const showShare = () => {
+    fetchTeachers();
+    setActivePanel('panel-3');
+    setVisible2(true);
+  };
+
+
   const handleCancel = () => {
     setSearchParams({ tab: 'home' });
     setVisible(false);
+    setVisible2(false);
   };
 
   const handleOk = async () => {
@@ -73,6 +112,18 @@ export default function LessonModuleModal({
     setActivePanel('panel-2');
   };
 
+
+  const shareLesson = () => {
+    console.log("sharing");
+    setSearchParams({ tab: 'home' });
+    setVisible2(false);
+    message.success(`Lesson shared`)
+  };
+
+  const updateSelected = () => {
+    console.log("sharing")
+  };
+
   const deleteLesson = async () =>{
     const res  = await deleteLessonModule(selected.id)
     if(res.data){
@@ -82,6 +133,7 @@ export default function LessonModuleModal({
       message.error(`Could not delete '${selected.name}'`)
     }
   };
+  
 
   const addActivity = async () =>{
     const res = await createActivity
@@ -89,6 +141,28 @@ export default function LessonModuleModal({
 
   return (
     <div id='lesson-module-modal'>
+      <button id='share-btn' onClick={showShare}><i className="fa fa-solid fa-share"></i></button>
+      <Modal
+        title={
+          activePanel === 'panel-3'
+            ? 'Share Lesson'
+            : selected
+        }
+        visible={visible2}
+        onCancel={handleCancel}
+        footer={[
+          <Button key='ok' type='primary' onClick={shareLesson}>
+            Send
+          </Button>,
+        ]}
+      >
+        <div>
+          <p>Select Teacher to share lesson</p>
+          <select name='teacherSelector' id='avilableTeachers' onChange={updateSelected}>
+          </select>
+        </div>
+      </Modal>
+
       <button id='change-lesson-btn' onClick={showModal}>
         <p id='test'>Change</p>
       </button>

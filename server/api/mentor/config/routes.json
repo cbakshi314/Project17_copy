@@ -34,14 +34,6 @@
     },
     {
       "method": "PUT",
-      "path": "/mentors/sharelesson/:id",
-      "handler": "mentor.update",
-      "config": {
-        "policies": ["global::isClassroomManager"]
-      }
-    },
-    {
-      "method": "PUT",
       "path": "/mentors/:id",
       "handler": "mentor.update",
       "config": {

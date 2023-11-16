@@ -676,7 +676,7 @@ export const getClassroomWorkspace = async (id) =>
   export const shareLesson = async (id, lesson) =>
   makeRequest({
     method: PUT,
-    path: `${server}/mentor/sharelesson/${id}`,
+    path: `${server}/mentors/${id}`,
     auth: true,
     data: {
       lesson

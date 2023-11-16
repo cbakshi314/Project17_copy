@@ -172,7 +172,7 @@ export default function LessonModuleSelect({
           {visibleStandardsByUnit.map((unit) => {
             return checkedList.find((checked) => checked.id === unit.id) ? (
               <div key={unit.id}>
-                <Divider orientation='left'>{`Unit ${unit.number}- ${unit.name}`} <button id='delete-Unit' onClick={() => deleteUnit(unit)}> Delete Unit </button></Divider>
+                <Divider orientation='left'> {`Unit ${unit.number}- ${unit.name}`} <button id='delete-Unit' onClick={() => deleteUnit(unit)}> <i className=" fa fa-solid fa-trash" aria-hidden='true'/> </button></Divider>
                 {unit.lesson_modules.map((ls) => (
                   <div
                     key={ls.id}

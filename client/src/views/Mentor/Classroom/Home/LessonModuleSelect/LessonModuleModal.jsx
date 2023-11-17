@@ -62,7 +62,7 @@ export default function LessonModuleModal({
     var enter=true;
     if(res){
       for(const x in res.data){
-        if(res.data[x].user.email === exclude.email && res.data[x].user.username === exclude.username && !updated){
+        if(res.data[x].user.email !== exclude.email && res.data[x].user.username !== exclude.username && !updated){
           var teacher = res.data[x];
           if(enter){
             await setSelectedTeacher(teacher);
@@ -88,7 +88,6 @@ export default function LessonModuleModal({
   const showShare = () => {
     fetchTeachers();
     setActivePanel('panel-3');
-    console.log(activeLessonModule)
     setVisible2(true);
   };
 

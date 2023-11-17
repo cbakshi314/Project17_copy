@@ -119,7 +119,7 @@ export default function LessonModuleModal({
 
 
   const sendLesson = async () => {
-    const res = await shareLesson(selectedTeacher.id, {})
+    const res = await shareLesson(selectedTeacher.id, activeLessonModule)
     if(res.error){
 
     }

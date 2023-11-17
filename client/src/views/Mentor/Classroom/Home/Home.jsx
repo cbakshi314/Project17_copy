@@ -17,7 +17,6 @@ export default function Home({ classroomId, viewing }) {
   const [activities, setActivities] = useState([]);
   const [gradeId, setGradeId] = useState(null);
   const [activeLessonModule, setActiveLessonModule] = useState(null);
-  const [activityDetailsVisible, setActivityDetailsVisible] = useState(false)
   const navigate = useNavigate();
 
   const SCIENCE = 1;

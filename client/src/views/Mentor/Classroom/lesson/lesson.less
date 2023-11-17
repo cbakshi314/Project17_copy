@@ -72,11 +72,15 @@ h3{
     font-size: 20px;
     margin-top: 30px;
     margin-inline: auto;
-    animation: btnout forwards 400ms;
-}
+    transition: 300ms;
+    margin-bottom: 10px;
+    box-shadow: 0px 0px 6px black;
+    cursor: pointer;
 
-#c_lesson form .submitbtn:hover{
-    animation: btn forwards 400ms;
+    &:hover{
+        padding-inline: 20px;
+        box-shadow: 0px 0px 3px black;
+    }
 }
 
 .selection h4{
@@ -99,31 +103,13 @@ h3{
     padding-block: 5px;
     background-color: rgba(98, 172, 222, 0.777);
     border: none;
+    box-shadow: 0px 0px 5px black;
     border-radius: 0.25rem;
     cursor: pointer;
-}
 
-@keyframes btn{
-    0%{
-        padding-inline: 10px;
-        padding-block: 0px;
-        margin-bottom: 10px;
-    }
-    100%{
-        padding-inline: 20px;
-        padding-block: 5px;
-
-    }
-}
-@keyframes btnout{
-    0%{
-        padding-inline: 20px;
-        padding-block: 5px;
-    }
-    100%{
-        margin-bottom: 10px;
-        padding-inline: 10px;
-        padding-block: 0px;
+    &:focus{
+        outline:none;
+        border: 2px solid white;
     }
 }
 

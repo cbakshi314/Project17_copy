@@ -383,7 +383,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Mentor"
+                  "properties": {
+                    "foo": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
@@ -429,7 +433,11 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewMentor"
+                "properties": {
+                  "foo": {
+                    "type": "string"
+                  }
+                }
               }
             }
           }

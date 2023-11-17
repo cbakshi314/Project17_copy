@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "11/16/2023 2:46:59 PM"
+    "x-generation-date": "11/17/2023 4:54:46 PM"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -5784,7 +5784,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Mentor"
+                  "properties": {
+                    "foo": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
@@ -5830,7 +5834,11 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewMentor"
+                "properties": {
+                  "foo": {
+                    "type": "string"
+                  }
+                }
               }
             }
           }

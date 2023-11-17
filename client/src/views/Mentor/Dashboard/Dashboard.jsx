@@ -23,7 +23,6 @@ export default function Dashboard() {
         setInboxSize(res.data.inbox.length)
         if(res.data.inbox.length > 0){
           const banner = document.querySelector('.inbox-notification');
-          console.log(banner);
           banner.style.display = 'block';
         }
         res.data.classrooms.forEach((classroom) => {
@@ -43,7 +42,7 @@ export default function Dashboard() {
     navigate(`/classroom/${classroomId}`);
   };
 
-  const viewInbox = (userId) => {
+  const viewInbox = () => {
     navigate(`/inbox`);
   };
 
@@ -51,7 +50,7 @@ export default function Dashboard() {
   return (
     <div className='container nav-padding'>
       <NavBar />
-      <div id='main-header'>Welcome {value.name} <button id='share' onClick={() => viewInbox(userId)}> Shared Lessons <div className='inbox-notification'><p>{inboxSize}</p></div> </button> </div>
+      <div id='main-header'>Welcome {value.name} <button id='share' onClick={viewInbox}> Shared Lessons <div className='inbox-notification'><p>{inboxSize}</p></div> </button> </div>
       <MentorSubHeader title={'Your Classrooms'}></MentorSubHeader>
       <div id='classrooms-container'>
         <div id='dashboard-card-container'>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getMentor, getLessonModuleActivities } from '../../../Utils/requests';
-import { Modal, Button, message, Popconfirm, Tabs } from 'antd';
-import MentorSubHeader from '../../../components/MentorSubHeader/MentorSubHeader';
+import { Modal, Button, message, Popconfirm, Tabs, Tag } from 'antd';
+import '../Dashboard/Dashboard.less'
 import NavBar from '../../../components/NavBar/NavBar';
 import { useGlobalState } from '../../../Utils/userState';
 import { useNavigate } from 'react-router-dom';
@@ -12,7 +12,27 @@ const { TabPane } = Tabs;
 export default function Inbox() {
     const [printed, setprinted] = useState(false);
     const [visible, setVisible] = useState(false);
-    const [activities, setActivites] = useState({});
+    const [activities, setActivites] = useState([]);
+    const [selectedLesson, setSelectedLesson] = useState("");
+
+    const SCIENCE = 1;
+    const MAKING = 2;
+    const COMPUTATION = 3;
+
+    const color = [
+        'magenta',
+        'purple',
+        'green',
+        'cyan',
+        'red',
+        'geekblue',
+        'volcano',
+        'blue',
+        'orange',
+        'gold',
+        'lime',
+      ];
+    
     
     const navigate = useNavigate();
     
@@ -48,6 +68,7 @@ export default function Inbox() {
 
     const expand = async (lesson) =>{
         setVisible(true);
+        setSelectedLesson(lesson.name)
 
         const res = await getLessonModuleActivities(lesson.id)
         if(res.data){
@@ -78,7 +99,7 @@ export default function Inbox() {
             </div>
             <Modal
         title={
-          "Lesson Activities"
+          `Viewing: ${selectedLesson}`
         }
         visible={visible}
         onCancel={handleCancel}
@@ -102,15 +123,90 @@ export default function Inbox() {
           </Button>,
         ]}
       >
-        {/* <LessonModuleSelect
-          activePanel={activePanel}
-          setActivePanel={setActivePanel}
-          selected={selected}
-          setSelected={setSelected}
-          gradeId={gradeId}
-          activities={selectedActivities}
-          setActivities={setSelectedActivities}
-        /> */}
+            {activities ? (
+                <div id='card-btn-container' className='flex space-between'>
+                  {activities.map((activity) => (
+                    <div id="view-activity-card" key={activity.id}>
+                      <div id='activity-title'>
+                       Activity Level {activity.number}
+                       </div>
+                      <div id='view-activity-info'>
+                        <p>
+                          <strong>STANDARDS: </strong>
+                          {activity.StandardS}
+                        </p>
+                        <p>
+                          <strong>Description: </strong>
+                          {activity.description}
+                        </p>
+                        <p>
+                          <strong>Classroom Materials: </strong>
+                          {activity.learning_components
+                            .filter(
+                              (component) =>
+                                component.learning_component_type === SCIENCE
+                            )
+                            .map((element, index) => {
+                              return (
+                                <Tag
+                                  key={index}
+                                  color={color[(index + 1) % 11]}
+                                >
+                                  {element.type}
+                                </Tag>
+                              );
+                            })}
+                        </p>
+                        <p>
+                          <strong>Student Materials: </strong>
+                          {activity.learning_components
+                            .filter(
+                              (component) =>
+                                component.learning_component_type === MAKING
+                            )
+                            .map((element, index) => {
+                              return (
+                                <Tag
+                                  key={index}
+                                  color={color[(index + 4) % 11]}
+                                >
+                                  {element.type}
+                                </Tag>
+                              );
+                            })}
+                        </p>
+                        <p>
+                          <strong>Arduino Components: </strong>
+                          {activity.learning_components
+                            .filter(
+                              (component) =>
+                                component.learning_component_type ===
+                                COMPUTATION
+                            )
+                            .map((element, index) => {
+                              return (
+                                <Tag
+                                  key={index}
+                                  color={color[(index + 7) % 11]}
+                                >
+                                  {element.type}
+                                </Tag>
+                              );
+                            })}
+                        </p>
+                        {activity.link ? (
+                          <p>
+                            <strong>Link to Additional Information: </strong>
+                            <a href={activity.link} target='_blank' rel='noreferrer'>
+                              {activity.link}
+                            </a>
+                          </p>
+                        ) : null}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
       </Modal>
         </div>
     </div>

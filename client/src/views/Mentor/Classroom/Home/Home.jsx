@@ -32,7 +32,7 @@ export default function Home({ classroomId, viewing }) {
         setClassroom(classroom);
         setGradeId(classroom.grade.id);
         classroom.selections.forEach(async (selection) => {
-          if (selection.current) {
+          if (selection.current ) {
             const lsRes = await getLessonModule(
               selection.lesson_module
             );
@@ -103,6 +103,7 @@ export default function Home({ classroomId, viewing }) {
                 <h3>{`Learning Standard - ${activeLessonModule.name}`}</h3>
                 <LessonModuleModal
                   setActiveLessonModule={setActiveLessonModule}
+                  activeLessonModule={activeLessonModule}
                   classroomId={classroomId}
                   gradeId={gradeId}
                   viewing={viewing}

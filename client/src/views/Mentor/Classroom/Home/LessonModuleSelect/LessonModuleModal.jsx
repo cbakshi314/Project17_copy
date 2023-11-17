@@ -8,6 +8,7 @@ import {
   deleteLessonModule,
   createActivity,
   getTeachers,
+  shareLesson,
 } from '../../../../../Utils/requests';
 import { useSearchParams } from 'react-router-dom';
 
@@ -15,6 +16,7 @@ const teacherLayout = new Map();
 
 export default function LessonModuleModal({
   setActiveLessonModule,
+  activeLessonModule,
   gradeId,
   classroomId,
   viewing,
@@ -57,14 +59,16 @@ export default function LessonModuleModal({
   const fetchTeachers = async () => {
     const exclude = JSON.parse(sessionStorage.getItem('user'));
     const res = await getTeachers();
+    var enter=true;
     if(res){
       for(const x in res.data){
-        if(res.data[x].user.email !== exclude.email && res.data[x].user.username !== exclude.username && !updated){
+        if(res.data[x].user.email === exclude.email && res.data[x].user.username === exclude.username && !updated){
           var teacher = res.data[x];
-          if(selectedTeacher == null){
-            setSelectedTeacher(teacher);
+          if(enter){
+            await setSelectedTeacher(teacher);
+            enter = false;
           }
-          teacherLayout.set(`${teacher.last_name}, ${teacher.first_name}`, teacher);
+          teacherLayout.set(`${teacher.last_name}`, teacher);
           let optionElement = document.createElement('option');
           optionElement.value = teacher.last_name;
           optionElement.text = `${teacher.last_name}, ${teacher.first_name}`;
@@ -84,6 +88,7 @@ export default function LessonModuleModal({
   const showShare = () => {
     fetchTeachers();
     setActivePanel('panel-3');
+    console.log(activeLessonModule)
     setVisible2(true);
   };
 
@@ -113,15 +118,21 @@ export default function LessonModuleModal({
   };
 
 
-  const shareLesson = () => {
-    console.log("sharing");
-    setSearchParams({ tab: 'home' });
-    setVisible2(false);
-    message.success(`Lesson shared`)
+  const sendLesson = async () => {
+    const res = await shareLesson(selectedTeacher.id, {})
+    if(res.error){
+
+    }
+    else{
+      message.success(`Lesson shared`)
+      setSearchParams({ tab: 'home' });
+      setVisible2(false);
+    }
   };
 
-  const updateSelected = () => {
-    console.log("sharing")
+  const updateSelected = async (e) => {
+    const target = teacherLayout.get(e.target.value);
+    setSelectedTeacher(target);
   };
 
   const deleteLesson = async () =>{
@@ -151,7 +162,7 @@ export default function LessonModuleModal({
         visible={visible2}
         onCancel={handleCancel}
         footer={[
-          <Button key='ok' type='primary' onClick={shareLesson}>
+          <Button key='ok' type='primary' onClick={sendLesson}>
             Send
           </Button>,
         ]}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getMentor, getLessonModuleActivities } from '../../../Utils/requests';
-import { Tabs } from 'antd';
+import { Modal, Button, message, Popconfirm, Tabs } from 'antd';
 import MentorSubHeader from '../../../components/MentorSubHeader/MentorSubHeader';
 import NavBar from '../../../components/NavBar/NavBar';
 import { useGlobalState } from '../../../Utils/userState';
@@ -11,8 +11,8 @@ const { TabPane } = Tabs;
 
 export default function Inbox() {
     const [printed, setprinted] = useState(false);
-    const [viewing, setViewing] = useState(false);
-    const [activites, setActivites] = useState({});
+    const [visible, setVisible] = useState(false);
+    const [activities, setActivites] = useState({});
     
     const navigate = useNavigate();
     
@@ -32,7 +32,7 @@ export default function Inbox() {
                 const text1 = document.createElement('h2');
                 text1.innerText = `${lesson.name}`;
                 const text2 = document.createElement('p');
-                text2.innerText = `Expectations: ${lesson.expectations}`;
+                text2.innerHTML = `<strong>Expectations:</strong> ${lesson.expectations}`;
                 box.append(text1);
                 box.append(text2);
                 dataBox.append(box);
@@ -47,7 +47,7 @@ export default function Inbox() {
       }, []);
 
     const expand = async (lesson) =>{
-        setViewing(true);
+        setVisible(true);
 
         const res = await getLessonModuleActivities(lesson.id)
         if(res.data){
@@ -56,13 +56,18 @@ export default function Inbox() {
         else{
             message.error("unable to retrieve Lesson Module")
         }
-        console.log(activities)
     }
+    const handleCancel = () => {
+        setVisible(false);
+      };
+    const handleOk = () => {
+        setVisible(false);
+      };
+    
 
   return (
     <div className='container nav-padding'>
         <NavBar isMentor={true}/>
-
         <div>
             <button id='home-back-btn1' onClick={handleBack}>
                 <i className='fa fa-arrow-left' aria-hidden='true' />
@@ -71,6 +76,34 @@ export default function Inbox() {
             <div id='inboxData'>
 
             </div>
+            <Modal
+        title={
+          "Lesson Activities"
+        }
+        visible={visible}
+        onCancel={handleCancel}
+        width='60vw'
+        footer={[
+          <Button
+            key='ok'
+            type='primary'
+            disabled={false}
+            onClick={handleOk}
+          >
+            Save
+          </Button>,
+        ]}
+      >
+        {/* <LessonModuleSelect
+          activePanel={activePanel}
+          setActivePanel={setActivePanel}
+          selected={selected}
+          setSelected={setSelected}
+          gradeId={gradeId}
+          activities={selectedActivities}
+          setActivities={setSelectedActivities}
+        /> */}
+      </Modal>
         </div>
     </div>
   );

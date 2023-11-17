@@ -11,7 +11,11 @@ const { TabPane } = Tabs;
 
 export default function Inbox() {
     const [printed, setprinted] = useState(false);
+    const [viewing, setViewing] = useState(false);
+    const [activites, setActivites] = useState({});
+    
     const navigate = useNavigate();
+    
     const handleBack = () => {
         navigate('/dashboard');
       };
@@ -26,15 +30,11 @@ export default function Inbox() {
                 box.className = 'item';
                 box.onclick = () => expand(lesson);
                 const text1 = document.createElement('h2');
-                text1.innerHTML = `${lesson.name}`;
+                text1.innerText = `${lesson.name}`;
                 const text2 = document.createElement('p');
-                text2.innerHTML = `Expectations: ${lesson.expectations}`;
-                const text3 = document.createElement('p');
-                if(less)
-                text2.innerHTML = `Expectations: ${lesson.expectations}`;
+                text2.innerText = `Expectations: ${lesson.expectations}`;
                 box.append(text1);
                 box.append(text2);
-                box.append(text3);
                 dataBox.append(box);
             });
             setprinted(true);
@@ -46,8 +46,17 @@ export default function Inbox() {
         });
       }, []);
 
-    const expand = (lesson) =>{
-        console.log(lesson)
+    const expand = async (lesson) =>{
+        setViewing(true);
+
+        const res = await getLessonModuleActivities(lesson.id)
+        if(res.data){
+            setActivites(res.data);
+        }
+        else{
+            message.error("unable to retrieve Lesson Module")
+        }
+        console.log(activities)
     }
 
   return (

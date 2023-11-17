@@ -83,7 +83,15 @@ export default function Inbox() {
         visible={visible}
         onCancel={handleCancel}
         width='60vw'
-        footer={[
+        footer={[          
+        <Button
+            key='ok'
+            type='secondary'
+            disabled={false}
+            onClick={handleOk}
+          >
+            Delete
+          </Button>,
           <Button
             key='ok'
             type='primary'

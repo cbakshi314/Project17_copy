@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getMentor, getLessonModuleActivities, getClassrooms } from '../../../Utils/requests';
+import { getMentor, getLessonModuleActivities, getClassrooms, getUnits } from '../../../Utils/requests';
 import { Modal, Button, message, Popconfirm, Tabs, Tag } from 'antd';
 import '../Dashboard/Dashboard.less'
 import NavBar from '../../../components/NavBar/NavBar';
@@ -87,11 +87,34 @@ export default function Inbox() {
         });
       }, []);
 
-
+// display possible Units to save to
       useEffect(() =>{
         if(selectedClassroom > 0){
             console.log(selectedClassroom)
-            // gett possible units
+            useEffect(() => {
+                  const fetchUnits = async () => {
+                    try {
+                      const res = await getUnits(selectedClassroom);
+                      if (res.data) {
+                        for(const x in res.data){
+                            var unit = res.data[x];
+                            console.log(unit);
+                            unitLayout.set(unit.name, unit);
+                            setUnit(unit)
+                            let optionElement = document.createElement('option');
+                            optionElement.value = unit.name;
+                            optionElement.text = unit.name;
+                            selector[0].appendChild(optionElement);
+                        }
+                      } else {
+                        message.error(res.err);
+                      }
+                    } catch (error) {
+                      console.error("Error fetching units:", error);
+                    }
+                  };
+                  fetchUnits();
+              });
         }
 
       }, selectedClassroom)
@@ -99,6 +122,7 @@ export default function Inbox() {
     const setClassOptions = async() =>{
         const selector = document.getElementById('classOptions');
         let isFirstIteration = true; // Variable to track the first iteration
+        selector.innerHTML='';
 
         classroomMap.forEach((value, key) =>{
             console.log(value)
@@ -109,7 +133,7 @@ export default function Inbox() {
             // Check if it's the first iteration
             if (isFirstIteration) {
                 setSelectedClassroom(value.id);
-                isFirstIteration = false; // Set it to false after the first iteration
+                isFirstIteration = false;
             }
             else{
 
@@ -210,7 +234,7 @@ export default function Inbox() {
                     </div>
                     <div id='input'>
                         <h3>Unit:</h3>
-                        <select name="" id="">
+                        <select name="" id="unitOptions">
                             <option value="">Unit 1</option>
                         </select>
                     </div>

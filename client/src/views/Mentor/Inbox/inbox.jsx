@@ -12,6 +12,8 @@ const { TabPane } = Tabs;
 export default function Inbox() {
     const [printed, setprinted] = useState(false);
     const [visible, setVisible] = useState(false);
+    const[activePanel, setActivePanel] = useState("panel-1");
+    const [visible2, setVisible2] = useState(false);
     const [activities, setActivites] = useState([]);
     const [selectedLesson, setSelectedLesson] = useState("");
 
@@ -80,11 +82,23 @@ export default function Inbox() {
     }
     const handleCancel = () => {
         setVisible(false);
+        setVisible2(false);
         setActivites([])
       };
     const handleOk = () => {
         setVisible(false);
+        setVisible2(true);
       };
+    function saveTo(){
+        setActivePanel('panel-2');
+    }
+    function back(){
+        setActivePanel('panel-1');
+    }
+    function discard(){
+        // remove from inbox
+        handleCancel();
+    }
     
 
   return (
@@ -99,31 +113,37 @@ export default function Inbox() {
 
             </div>
             <Modal
-        title={
-          `Viewing: ${selectedLesson}`
-        }
-        visible={visible}
-        onCancel={handleCancel}
-        width='60vw'
-        footer={[          
-        <Button
-            key='ok'
-            type='secondary'
-            disabled={false}
-            onClick={handleOk}
-          >
-            Discard
-          </Button>,
-          <Button
-            key='ok'
-            type='primary'
-            disabled={false}
-            onClick={handleOk}
-          >
-            Save
-          </Button>,
-        ]}
-      >
+                title={
+                `Viewing: ${selectedLesson}`
+                }
+                visible={visible}
+                onCancel={handleCancel}
+                width='60vw'
+                footer={[          
+                <Button
+                    key='ok'
+                    type='secondary'
+                    disabled={false}
+                    onClick={activePanel === 'panel-1' ? discard : back}
+                >
+                {activePanel === 'panel-1'
+                    ? 'Discard'
+                    : 'Back'}
+                </Button>,
+                <Button
+                     key='ok'
+                      type='primary'
+                      onClick={activePanel === 'panel-1' ? saveTo : handleOk}
+                    >
+                  {activePanel === 'panel-1'
+                    ? 'Save to'
+                    : 'Save'}
+                </Button>,
+                ]}
+            >
+            <div
+            className={activePanel === 'panel-1' ? 'panel-1 show' : 'panel-1 hide'}
+            >
             {activities ? (
                 <div id='card-inbox-container' className='flex space-between'>
                   {activities.map((activity) => (
@@ -208,7 +228,15 @@ export default function Inbox() {
                   ))}
                 </div>
               ) : null}
-      </Modal>
+            </div>
+            <div
+                 className={activePanel !== 'panel-1' ? 'panel-1 show' : 'panel-1 hide'}
+                >
+                    <form action="">
+                        <select name="" id=""></select>
+                    </form>
+            </div>
+        </Modal>
         </div>
     </div>
   );

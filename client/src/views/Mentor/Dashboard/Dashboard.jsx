@@ -11,7 +11,6 @@ import { useNavigate } from 'react-router-dom';
 export default function Dashboard() {
   const [classrooms, setClassrooms] = useState([]);
   const [value] = useGlobalState('currUser');
-  const[userId, setUserId] = useState([]);
   const[inboxSize, setInboxSize] = useState(null);
   const navigate = useNavigate();
 
@@ -19,7 +18,6 @@ export default function Dashboard() {
     let classroomIds = [];
     getMentor().then((res) => {
       if (res.data) {
-        setUserId(res.data.id);
         setInboxSize(res.data.inbox.length)
         if(res.data.inbox.length > 0){
           const banner = document.querySelector('.inbox-notification');
@@ -42,7 +40,7 @@ export default function Dashboard() {
     navigate(`/classroom/${classroomId}`);
   };
 
-  const viewInbox = () => {
+  function viewInbox() {
     navigate(`/inbox`);
   };
 

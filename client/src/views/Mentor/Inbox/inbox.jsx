@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getMentor, getLessonModuleActivities } from '../../../Utils/requests';
+import { getMentor, getLessonModuleActivities, getClassrooms } from '../../../Utils/requests';
 import { Modal, Button, message, Popconfirm, Tabs, Tag } from 'antd';
 import '../Dashboard/Dashboard.less'
 import NavBar from '../../../components/NavBar/NavBar';
@@ -8,12 +8,16 @@ import { useNavigate } from 'react-router-dom';
 import './Inbox.less';
 
 const { TabPane } = Tabs;
+const classroomMap = new Map();
 
 export default function Inbox() {
     const [printed, setprinted] = useState(false);
     const [visible, setVisible] = useState(false);
+    const[activePanel, setActivePanel] = useState("panel-1");
+    const [visible2, setVisible2] = useState(false);
     const [activities, setActivites] = useState([]);
     const [selectedLesson, setSelectedLesson] = useState("");
+    const [selectedClassroom, setSelectedClassroom] = useState(null);
 
     const SCIENCE = 1;
     const MAKING = 2;
@@ -32,7 +36,25 @@ export default function Inbox() {
         'gold',
         'lime',
       ];
-    
+      useEffect(() => {
+        let classroomIds = [];
+        getMentor().then((res) => {
+          if (res.data) {
+            res.data.classrooms.forEach((classroom) => {
+              classroomIds.push(classroom.id);
+            });
+            getClassrooms(classroomIds).then((classrooms) => {
+              classrooms.forEach((classroom) => {
+                classroomMap.set(classroom.id, classroom);
+              });
+              setClassOptions(classroomMap)
+            });
+          } else {
+            message.error(res.err);
+            navigate('/teacherlogin');
+          }
+        });
+      }, []);
     
     const navigate = useNavigate();
     
@@ -45,7 +67,6 @@ export default function Inbox() {
         getMentor().then((res) => {
           if (res.data && !printed) {
             res.data.inbox.forEach((lesson) => {
-                console.log(lesson);
                 const box = document.createElement('div');
                 box.className = 'item';
                 box.onclick = () => expand(lesson);
@@ -66,6 +87,13 @@ export default function Inbox() {
         });
       }, []);
 
+    function setClassOptions(){
+        const options = document.getElementById('classOptions');
+        classroomMap.forEach((value, key) =>{
+            // create options
+        })
+    }
+
     const expand = async (lesson) =>{
         setVisible(true);
         setSelectedLesson(lesson.name)
@@ -80,11 +108,29 @@ export default function Inbox() {
     }
     const handleCancel = () => {
         setVisible(false);
-        setActivites([])
+        setVisible2(false);
+        setActivites([]);
+        setActivePanel('panel-1');
       };
-    const handleOk = () => {
+    const handleSave = () => {
         setVisible(false);
+        setVisible2(true);
       };
+    function saveTo(){
+        setActivePanel('panel-2');
+        // get classrooms and Units
+    }
+    function back(){
+        setActivePanel('panel-1');
+    }
+    function discard(){
+        // remove from inbox
+        handleCancel();
+    }
+
+    const chooseClassroom  = (e) =>{
+        const chosen = e.target.value
+    }
     
 
   return (
@@ -99,31 +145,55 @@ export default function Inbox() {
 
             </div>
             <Modal
-        title={
-          `Viewing: ${selectedLesson}`
-        }
-        visible={visible}
-        onCancel={handleCancel}
-        width='60vw'
-        footer={[          
-        <Button
-            key='ok'
-            type='secondary'
-            disabled={false}
-            onClick={handleOk}
-          >
-            Discard
-          </Button>,
-          <Button
-            key='ok'
-            type='primary'
-            disabled={false}
-            onClick={handleOk}
-          >
-            Save
-          </Button>,
-        ]}
-      >
+                title= {activePanel === 'panel-1'
+                ? `Viewing: ${selectedLesson}`
+                : `Saving: ${selectedLesson}`}
+                visible={visible}
+                onCancel={handleCancel}
+                width='60vw'
+                footer={[          
+                <Button
+                    key='ok'
+                    type='secondary'
+                    disabled={false}
+                    onClick={activePanel === 'panel-1' ? discard : back}
+                >
+                {activePanel === 'panel-1'
+                    ? 'Discard'
+                    : 'Back'}
+                </Button>,
+                <Button
+                     key='ok'
+                      type='primary'
+                      onClick={activePanel === 'panel-1' ? saveTo : handleSave}
+                    >
+                  {activePanel === 'panel-1'
+                    ? 'Save to'
+                    : 'Save'}
+                </Button>,
+                ]}
+            >
+            <div
+                 className={activePanel !== 'panel-1' ? 'panel-1 show' : 'panel-1 hide'}
+                >
+                <div className='saving-box'>
+                    <div id='input'>
+                        <h3>Classroom:</h3>
+                        <select name="" id="classOptions" onChange={chooseClassroom}>
+                            <option value="1">Classroom 1</option>
+                        </select>
+                    </div>
+                    <div id='input'>
+                        <h3>Unit:</h3>
+                        <select name="" id="">
+                            <option value="">Unit 1</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div
+            className={activePanel === 'panel-1' ? 'panel-1 show' : 'panel-1 hide'}
+            >
             {activities ? (
                 <div id='card-inbox-container' className='flex space-between'>
                   {activities.map((activity) => (
@@ -208,7 +278,8 @@ export default function Inbox() {
                   ))}
                 </div>
               ) : null}
-      </Modal>
+            </div>
+        </Modal>
         </div>
     </div>
   );

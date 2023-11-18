@@ -17,7 +17,7 @@ export default function Inbox() {
     const [visible2, setVisible2] = useState(false);
     const [activities, setActivites] = useState([]);
     const [selectedLesson, setSelectedLesson] = useState("");
-    const [selectedClassroom, setSelectedClassroom] = useState(null);
+    const [selectedClassroom, setSelectedClassroom] = useState(0);
 
     const SCIENCE = 1;
     const MAKING = 2;
@@ -87,10 +87,33 @@ export default function Inbox() {
         });
       }, []);
 
-    function setClassOptions(){
-        const options = document.getElementById('classOptions');
+
+      useEffect(() =>{
+        if(selectedClassroom > 0){
+            console.log(selectedClassroom)
+            // gett possible units
+        }
+
+      }, selectedClassroom)
+
+    const setClassOptions = async() =>{
+        const selector = document.getElementById('classOptions');
+        let isFirstIteration = true; // Variable to track the first iteration
+
         classroomMap.forEach((value, key) =>{
-            // create options
+            console.log(value)
+            let optionElement = document.createElement('option');
+            optionElement.value = key;
+            optionElement.text = value.name;
+            selector.appendChild(optionElement);
+            // Check if it's the first iteration
+            if (isFirstIteration) {
+                setSelectedClassroom(value.id);
+                isFirstIteration = false; // Set it to false after the first iteration
+            }
+            else{
+
+            }
         })
     }
 
@@ -129,7 +152,10 @@ export default function Inbox() {
     }
 
     const chooseClassroom  = (e) =>{
-        const chosen = e.target.value
+        e.preventDefault();
+        const chosen = parseInt(e.target.value)
+        console.log(chosen)
+        setSelectedClassroom(chosen)
     }
     
 
@@ -180,7 +206,6 @@ export default function Inbox() {
                     <div id='input'>
                         <h3>Classroom:</h3>
                         <select name="" id="classOptions" onChange={chooseClassroom}>
-                            <option value="1">Classroom 1</option>
                         </select>
                     </div>
                     <div id='input'>

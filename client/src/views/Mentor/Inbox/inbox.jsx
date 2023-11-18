@@ -80,6 +80,7 @@ export default function Inbox() {
     }
     const handleCancel = () => {
         setVisible(false);
+        setActivites([])
       };
     const handleOk = () => {
         setVisible(false);
@@ -111,7 +112,7 @@ export default function Inbox() {
             disabled={false}
             onClick={handleOk}
           >
-            Delete
+            Discard
           </Button>,
           <Button
             key='ok'
@@ -124,9 +125,9 @@ export default function Inbox() {
         ]}
       >
             {activities ? (
-                <div id='card-btn-container' className='flex space-between'>
+                <div id='card-inbox-container' className='flex space-between'>
                   {activities.map((activity) => (
-                    <div id="view-activity-card" key={activity.id}>
+                    <div id="view-inbox-activity-card" key={activity.id}>
                       <div id='activity-title'>
                        Activity Level {activity.number}
                        </div>

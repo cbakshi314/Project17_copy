@@ -61,18 +61,37 @@
 }
 
 .title{
-  color: white;
+  color: rgb(10, 87, 138);
+  background-color: whitesmoke;
+  margin-inline: auto;
+  width: fit-content;
+  font-weight: 600;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  margin-top: 12px;
+  padding-top: 12px;
+  padding-inline: 6vw;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 
-#view-activity-card{
-  background-color: rgb(219, 219, 219);
-  padding:10px;
+#card-inbox-container{
+  gap: 15px;
+}
+
+#view-inbox-activity-card{
+  background-color: rgb(228, 228, 228);
+  padding:0px;
   border-radius: 10px;
   max-width: 500px;
-}
+  box-shadow: 2px 2px 3px black;
 
-#card-btn-container{
-  gap: 15px;
+  #activity-title{
+    background-color: rgb(215, 236, 255);
+    padding:10px;
+    font-weight: 600;
+    border-top-right-radius: 10px;
+
+  }
+  #view-activity-info{
+    padding: 10px;
+  }
 }

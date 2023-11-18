@@ -40,11 +40,6 @@ export default function Inbox() {
         let classroomIds = [];
         getMentor().then((res) => {
           if (res.data) {
-            setInboxSize(res.data.inbox.length)
-            if(res.data.inbox.length > 0){
-              const banner = document.querySelector('.inbox-notification');
-              banner.style.display = 'block';
-            }
             res.data.classrooms.forEach((classroom) => {
               classroomIds.push(classroom.id);
             });
@@ -52,6 +47,7 @@ export default function Inbox() {
               classrooms.forEach((classroom) => {
                 classroomMap.set(classroom.id, classroom);
               });
+              setClassOptions(classroomMap)
             });
           } else {
             message.error(res.err);
@@ -71,7 +67,6 @@ export default function Inbox() {
         getMentor().then((res) => {
           if (res.data && !printed) {
             res.data.inbox.forEach((lesson) => {
-                console.log(lesson);
                 const box = document.createElement('div');
                 box.className = 'item';
                 box.onclick = () => expand(lesson);
@@ -91,6 +86,13 @@ export default function Inbox() {
           }
         });
       }, []);
+
+    function setClassOptions(){
+        const options = document.getElementById('classOptions');
+        classroomMap.forEach((value, key) =>{
+            // create options
+        })
+    }
 
     const expand = async (lesson) =>{
         setVisible(true);
@@ -177,7 +179,7 @@ export default function Inbox() {
                 <div className='saving-box'>
                     <div id='input'>
                         <h3>Classroom:</h3>
-                        <select name="" id="" onChange={chooseClassroom}>
+                        <select name="" id="classOptions" onChange={chooseClassroom}>
                             <option value="1">Classroom 1</option>
                         </select>
                     </div>

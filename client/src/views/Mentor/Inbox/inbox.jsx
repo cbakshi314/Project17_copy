@@ -90,6 +90,8 @@ export default function Inbox() {
 // display possible Units to save to
       useEffect(() =>{
         if(selectedClassroom > 0){
+            const selector = document.getElementById('classOptions');
+
             console.log(selectedClassroom)
             useEffect(() => {
                   const fetchUnits = async () => {
@@ -104,7 +106,7 @@ export default function Inbox() {
                             let optionElement = document.createElement('option');
                             optionElement.value = unit.name;
                             optionElement.text = unit.name;
-                            selector[0].appendChild(optionElement);
+                            selector.appendChild(optionElement);
                         }
                       } else {
                         message.error(res.err);
@@ -120,9 +122,8 @@ export default function Inbox() {
       }, selectedClassroom)
 
     const setClassOptions = async() =>{
-        const selector = document.getElementById('classOptions');
         let isFirstIteration = true; // Variable to track the first iteration
-        selector.innerHTML='';
+        const selector = document.getElementById('classOptions');
 
         classroomMap.forEach((value, key) =>{
             console.log(value)

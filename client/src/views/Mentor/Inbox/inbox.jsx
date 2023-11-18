@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getMentor, getLessonModuleActivities } from '../../../Utils/requests';
+import { getMentor, getLessonModuleActivities, getClassrooms } from '../../../Utils/requests';
 import { Modal, Button, message, Popconfirm, Tabs, Tag } from 'antd';
 import '../Dashboard/Dashboard.less'
 import NavBar from '../../../components/NavBar/NavBar';
@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import './Inbox.less';
 
 const { TabPane } = Tabs;
+const classroomMap = new Map();
 
 export default function Inbox() {
     const [printed, setprinted] = useState(false);
@@ -16,6 +17,7 @@ export default function Inbox() {
     const [visible2, setVisible2] = useState(false);
     const [activities, setActivites] = useState([]);
     const [selectedLesson, setSelectedLesson] = useState("");
+    const [selectedClassroom, setSelectedClassroom] = useState(null);
 
     const SCIENCE = 1;
     const MAKING = 2;
@@ -34,7 +36,29 @@ export default function Inbox() {
         'gold',
         'lime',
       ];
-    
+      useEffect(() => {
+        let classroomIds = [];
+        getMentor().then((res) => {
+          if (res.data) {
+            setInboxSize(res.data.inbox.length)
+            if(res.data.inbox.length > 0){
+              const banner = document.querySelector('.inbox-notification');
+              banner.style.display = 'block';
+            }
+            res.data.classrooms.forEach((classroom) => {
+              classroomIds.push(classroom.id);
+            });
+            getClassrooms(classroomIds).then((classrooms) => {
+              classrooms.forEach((classroom) => {
+                classroomMap.set(classroom.id, classroom);
+              });
+            });
+          } else {
+            message.error(res.err);
+            navigate('/teacherlogin');
+          }
+        });
+      }, []);
     
     const navigate = useNavigate();
     
@@ -83,14 +107,16 @@ export default function Inbox() {
     const handleCancel = () => {
         setVisible(false);
         setVisible2(false);
-        setActivites([])
+        setActivites([]);
+        setActivePanel('panel-1');
       };
-    const handleOk = () => {
+    const handleSave = () => {
         setVisible(false);
         setVisible2(true);
       };
     function saveTo(){
         setActivePanel('panel-2');
+        // get classrooms and Units
     }
     function back(){
         setActivePanel('panel-1');
@@ -98,6 +124,10 @@ export default function Inbox() {
     function discard(){
         // remove from inbox
         handleCancel();
+    }
+
+    const chooseClassroom  = (e) =>{
+        const chosen = e.target.value
     }
     
 
@@ -113,9 +143,9 @@ export default function Inbox() {
 
             </div>
             <Modal
-                title={
-                `Viewing: ${selectedLesson}`
-                }
+                title= {activePanel === 'panel-1'
+                ? `Viewing: ${selectedLesson}`
+                : `Saving: ${selectedLesson}`}
                 visible={visible}
                 onCancel={handleCancel}
                 width='60vw'
@@ -133,7 +163,7 @@ export default function Inbox() {
                 <Button
                      key='ok'
                       type='primary'
-                      onClick={activePanel === 'panel-1' ? saveTo : handleOk}
+                      onClick={activePanel === 'panel-1' ? saveTo : handleSave}
                     >
                   {activePanel === 'panel-1'
                     ? 'Save to'
@@ -141,6 +171,24 @@ export default function Inbox() {
                 </Button>,
                 ]}
             >
+            <div
+                 className={activePanel !== 'panel-1' ? 'panel-1 show' : 'panel-1 hide'}
+                >
+                <div className='saving-box'>
+                    <div id='input'>
+                        <h3>Classroom:</h3>
+                        <select name="" id="" onChange={chooseClassroom}>
+                            <option value="1">Classroom 1</option>
+                        </select>
+                    </div>
+                    <div id='input'>
+                        <h3>Unit:</h3>
+                        <select name="" id="">
+                            <option value="">Unit 1</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
             <div
             className={activePanel === 'panel-1' ? 'panel-1 show' : 'panel-1 hide'}
             >
@@ -228,13 +276,6 @@ export default function Inbox() {
                   ))}
                 </div>
               ) : null}
-            </div>
-            <div
-                 className={activePanel !== 'panel-1' ? 'panel-1 show' : 'panel-1 hide'}
-                >
-                    <form action="">
-                        <select name="" id=""></select>
-                    </form>
             </div>
         </Modal>
         </div>

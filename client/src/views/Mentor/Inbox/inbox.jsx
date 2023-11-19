@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getMentor, getLessonModuleActivities, getClassrooms } from '../../../Utils/requests';
+import { getMentor, getLessonModuleActivities, getClassrooms, getUnits } from '../../../Utils/requests';
 import { Modal, Button, message, Popconfirm, Tabs, Tag } from 'antd';
 import '../Dashboard/Dashboard.less'
 import NavBar from '../../../components/NavBar/NavBar';
@@ -13,11 +13,10 @@ const classroomMap = new Map();
 export default function Inbox() {
     const [printed, setprinted] = useState(false);
     const [visible, setVisible] = useState(false);
+    const [set, setSet] = useState(false);
     const[activePanel, setActivePanel] = useState("panel-1");
-    const [visible2, setVisible2] = useState(false);
     const [activities, setActivites] = useState([]);
     const [selectedLesson, setSelectedLesson] = useState("");
-    const [selectedClassroom, setSelectedClassroom] = useState(null);
 
     const SCIENCE = 1;
     const MAKING = 2;
@@ -38,22 +37,22 @@ export default function Inbox() {
       ];
       useEffect(() => {
         let classroomIds = [];
-        getMentor().then((res) => {
+        getMentor().then(async (res) => {
           if (res.data) {
             res.data.classrooms.forEach((classroom) => {
               classroomIds.push(classroom.id);
             });
-            getClassrooms(classroomIds).then((classrooms) => {
+            await getClassrooms(classroomIds).then((classrooms) => {
               classrooms.forEach((classroom) => {
                 classroomMap.set(classroom.id, classroom);
+                console.log(classroom)
               });
-              setClassOptions(classroomMap)
             });
           } else {
             message.error(res.err);
             navigate('/teacherlogin');
           }
-        });
+        })
       }, []);
     
     const navigate = useNavigate();
@@ -87,12 +86,51 @@ export default function Inbox() {
         });
       }, []);
 
-    function setClassOptions(){
-        const options = document.getElementById('classOptions');
-        classroomMap.forEach((value, key) =>{
-            // create options
-        })
-    }
+// display possible Units to save to
+      function updateUnits(chosen){
+        const grade = classroomMap.get(chosen).grade.id;
+        if(chosen > 0){
+            const selector = document.getElementById('unitOptions');
+            selector.innerHTML="";
+                  const fetchUnits = async () => {
+                    try {
+                      const res = await getUnits(grade);
+                      if (res.data) {
+                        for(const x in res.data){
+                            var unit = res.data[x];
+                            let optionElement = document.createElement('option');
+                            optionElement.value = unit.name;
+                            optionElement.text = unit.name;
+                            selector.appendChild(optionElement);
+                        }
+                      } else {
+                        message.error(res.err);
+                      }
+                    } catch (error) {
+                      console.error("Error fetching units:", error);
+                    }
+                  };fetchUnits();   
+        }}
+    
+    // set classes
+    useEffect(() => {
+        const setClassOptions = async () => {
+            const selector = document.getElementById('classOptions');
+            selector.innerHTML=`<option value="0"></option>`;
+            
+            classroomMap.forEach((value, key) => {
+                let optionElement = document.createElement('option');
+                optionElement.value = key;
+                optionElement.text = value.name;
+                selector.appendChild(optionElement);
+            });
+        };
+    
+        if (!set && activePanel === 'panel-2') {
+            setSet(true);
+            setClassOptions();
+        }
+    }, [activePanel]);
 
     const expand = async (lesson) =>{
         setVisible(true);
@@ -108,14 +146,14 @@ export default function Inbox() {
     }
     const handleCancel = () => {
         setVisible(false);
-        setVisible2(false);
         setActivites([]);
         setActivePanel('panel-1');
       };
     const handleSave = () => {
-        setVisible(false);
-        setVisible2(true);
+        discard();
+        message.success("Lesson Saved")
       };
+
     function saveTo(){
         setActivePanel('panel-2');
         // get classrooms and Units
@@ -129,7 +167,9 @@ export default function Inbox() {
     }
 
     const chooseClassroom  = (e) =>{
-        const chosen = e.target.value
+        e.preventDefault();
+        const chosen = parseInt(e.target.value)
+        updateUnits(chosen);
     }
     
 
@@ -180,13 +220,13 @@ export default function Inbox() {
                     <div id='input'>
                         <h3>Classroom:</h3>
                         <select name="" id="classOptions" onChange={chooseClassroom}>
-                            <option value="1">Classroom 1</option>
+                            <option value="0"></option>
                         </select>
                     </div>
                     <div id='input'>
                         <h3>Unit:</h3>
-                        <select name="" id="">
-                            <option value="">Unit 1</option>
+                        <select name="" id="unitOptions">
+                            <option value="0">Please select class</option>
                         </select>
                     </div>
                 </div>

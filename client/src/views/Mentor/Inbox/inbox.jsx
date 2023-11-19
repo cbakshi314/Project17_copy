@@ -150,8 +150,10 @@ export default function Inbox() {
         setActivePanel('panel-1');
       };
     const handleSave = () => {
-        setVisible(false);
+        discard();
+        message.success("Lesson Saved")
       };
+
     function saveTo(){
         setActivePanel('panel-2');
         // get classrooms and Units

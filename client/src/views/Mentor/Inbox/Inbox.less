@@ -98,13 +98,20 @@
 
 .saving-box{
   margin: auto;
-  display: grid;
+  display: flex;
+  flex-direction: column;
   padding-block: 15px;
   gap: 30px;
   width: fit-content;
 
+  h3{
+    width: fit-content;
+    margin-inline: 0;
+  }
+
   & select{
     appearance: none;
+    
     /*  safari  */
     -webkit-appearance: none;
     /*  other styles for aesthetics */
@@ -125,7 +132,13 @@
   & #input{
     display: grid;
     grid-template-columns: auto auto;
+    width: fit-content;
+    margin: auto;
     gap: 10px;
+
+    & #unitOptions{
+      min-width: 200px;
+    }
 
     & h3{
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;

@@ -7,8 +7,8 @@ import { useGlobalState } from '../../../Utils/userState';
 import { useNavigate } from 'react-router-dom';
 import './Inbox.less';
 
-const { TabPane } = Tabs;
 const classroomMap = new Map();
+const unitMap = new Map();
 
 export default function Inbox() {
     const [printed, setprinted] = useState(false);
@@ -17,6 +17,10 @@ export default function Inbox() {
     const[activePanel, setActivePanel] = useState("panel-1");
     const [activities, setActivites] = useState([]);
     const [selectedLesson, setSelectedLesson] = useState("");
+    
+    const [chosenClass, setChosenClass] = useState("");
+    const [chosenUnit, setChosenUnit] = useState("");
+
 
     const SCIENCE = 1;
     const MAKING = 2;
@@ -88,18 +92,22 @@ export default function Inbox() {
 
 // display possible Units to save to
       function updateUnits(chosen){
-        const grade = classroomMap.get(chosen).grade.id;
+        const selector = document.getElementById('unitOptions');
+
         if(chosen > 0){
-            const selector = document.getElementById('unitOptions');
+            unitMap.clear();
+            const grade = classroomMap.get(chosen).grade.id;
             selector.innerHTML="";
+            selector.removeAttribute("disabled");
                   const fetchUnits = async () => {
                     try {
                       const res = await getUnits(grade);
                       if (res.data) {
                         for(const x in res.data){
                             var unit = res.data[x];
+                            unitMap.set(unit.id, unit)
                             let optionElement = document.createElement('option');
-                            optionElement.value = unit.name;
+                            optionElement.value = unit.id;
                             optionElement.text = unit.name;
                             selector.appendChild(optionElement);
                         }
@@ -110,7 +118,12 @@ export default function Inbox() {
                       console.error("Error fetching units:", error);
                     }
                   };fetchUnits();   
-        }}
+        }
+        else{
+            selector.innerHTML=`<option value="0"> Please select Class</option>`;
+            selector.setAttribute("disabled", "disabled");
+        }
+    }
     
     // set classes
     useEffect(() => {
@@ -150,6 +163,7 @@ export default function Inbox() {
         setActivePanel('panel-1');
       };
     const handleSave = () => {
+        let unit = unitMap.get(chosenUnit);
         discard();
         message.success("Lesson Saved")
       };
@@ -169,7 +183,14 @@ export default function Inbox() {
     const chooseClassroom  = (e) =>{
         e.preventDefault();
         const chosen = parseInt(e.target.value)
+        setChosenClass(chosen);
         updateUnits(chosen);
+    }
+
+    const chooseUnit  = (e) =>{
+        e.preventDefault();
+        const chosen = parseInt(e.target.value)
+        setChosenUnit(chosen);
     }
     
 
@@ -199,7 +220,7 @@ export default function Inbox() {
                     onClick={activePanel === 'panel-1' ? discard : back}
                 >
                 {activePanel === 'panel-1'
-                    ? 'Discard'
+                    ? 'Discard Lesson'
                     : 'Back'}
                 </Button>,
                 <Button
@@ -225,7 +246,7 @@ export default function Inbox() {
                     </div>
                     <div id='input'>
                         <h3>Unit:</h3>
-                        <select name="" id="unitOptions">
+                        <select name="" id="unitOptions" disabled='disabled' onChange={chooseUnit}>
                             <option value="0">Please select class</option>
                         </select>
                     </div>

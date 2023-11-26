@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getMentor, getLessonModuleActivities, getClassrooms, getUnits } from '../../../Utils/requests';
+import { getMentor, getLessonModuleActivities, getClassrooms, getUnits, removeLesson } from '../../../Utils/requests';
 import { Modal, Button, message, Popconfirm, Tabs, Tag } from 'antd';
 import '../Dashboard/Dashboard.less'
 import NavBar from '../../../components/NavBar/NavBar';
@@ -16,8 +16,7 @@ export default function Inbox() {
     const [set, setSet] = useState(false);
     const[activePanel, setActivePanel] = useState("panel-1");
     const [activities, setActivites] = useState([]);
-    const [selectedLesson, setSelectedLesson] = useState("");
-    
+    const [selectedLesson, setSelectedLesson] = useState({});
     const [chosenClass, setChosenClass] = useState("");
     const [chosenUnit, setChosenUnit] = useState("");
 
@@ -147,7 +146,7 @@ export default function Inbox() {
 
     const expand = async (lesson) =>{
         setVisible(true);
-        setSelectedLesson(lesson.name)
+        setSelectedLesson(lesson)
 
         const res = await getLessonModuleActivities(lesson.id)
         if(res.data){
@@ -175,8 +174,18 @@ export default function Inbox() {
     function back(){
         setActivePanel('panel-1');
     }
-    function discard(){
-        // remove from inbox
+
+    // remove from inbox
+    const discard = async ()=>{
+      const user = JSON.parse(sessionStorage.getItem('user'));
+      const res = await removeLesson(user.id, selectedLesson);
+      if(res){
+        setprinted(false);
+        message.success();
+      }
+      else{
+        message.error(res.error);
+      }
         handleCancel();
     }
 
@@ -207,8 +216,8 @@ export default function Inbox() {
             </div>
             <Modal
                 title= {activePanel === 'panel-1'
-                ? `Viewing: ${selectedLesson}`
-                : `Saving: ${selectedLesson}`}
+                ? `Viewing: ${selectedLesson.name}`
+                : `Saving: ${selectedLesson.name}`}
                 visible={visible}
                 onCancel={handleCancel}
                 width='60vw'

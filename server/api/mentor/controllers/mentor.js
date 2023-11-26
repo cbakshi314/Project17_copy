@@ -72,37 +72,39 @@ module.exports = {
 
         return sanitizeEntity(updatedMentor, { model: strapi.models.mentor });
     },
+    async remove(ctx){
+        const { id } = ctx.params;
+        console.log("Removing from inbox1");
+      
+        const { itemToRemove } = ctx.request.body;
+      
+        if (ctx.is('multipart'))
+          return ctx.badRequest('Multipart requests are not accepted!', {
+            id: 'activity.remove.format.invalid',
+            error: 'ValidationError',
+          });
+      
+        if (!itemToRemove)
+          return ctx.badRequest('Item to remove must be provided!', {
+            id: 'activity.remove.body.invalid',
+            error: 'ValidationError',
+          });
 
-    // async removeinbox(ctx) {
-    //     const { id } = ctx.params;
-    //     console.log("Removing from inbox");
       
-    //     const { itemToRemove } = ctx.request.body;
+        // Retrieve the existing mentor data
+        const existingMentor = await strapi.services.mentor.findOne({ id });
       
-    //     if (ctx.is('multipart'))
-    //       return ctx.badRequest('Multipart requests are not accepted!', {
-    //         id: 'activity.removeFromInbox.format.invalid',
-    //         error: 'ValidationError',
-    //       });
+        // Remove the specified item from the inbox
+        const updatedInbox = existingMentor.inbox.filter(item => item != itemToRemove);
+
+        console.log(updatedInbox);
       
-    //     if (!itemToRemove)
-    //       return ctx.badRequest('Item to remove must be provided!', {
-    //         id: 'activity.removeFromInbox.body.invalid',
-    //         error: 'ValidationError',
-    //       });
+        // Update the mentor with the modified inbox
+        const updatedMentor = await strapi.services.mentor.update(
+          { id },
+          { inbox: updatedInbox }
+        );
       
-    //     // Retrieve the existing mentor data
-    //     const existingMentor = await strapi.services.mentor.findOne({ id });
-      
-    //     // Remove the specified item from the inbox
-    //     const updatedInbox = existingMentor.inbox.filter(item => item !== itemToRemove);
-      
-    //     // Update the mentor with the modified inbox
-    //     const updatedMentor = await strapi.services.mentor.update(
-    //       { id },
-    //       { inbox: updatedInbox }
-    //     );
-      
-    //     return sanitizeEntity(updatedMentor, { model: strapi.models.mentor });
-    //   }
+        return sanitizeEntity(updatedMentor, { model: strapi.models.mentor });
+    },
 }

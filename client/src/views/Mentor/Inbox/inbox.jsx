@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getMentor, getLessonModuleActivities, getClassrooms, getUnits, removeLesson } from '../../../Utils/requests';
+import { getMentor, getLessonModuleActivities, getClassrooms, getUnits, removeLesson, createLessonModule} from '../../../Utils/requests';
 import { Modal, Button, message, Popconfirm, Tabs, Tag } from 'antd';
 import '../Dashboard/Dashboard.less'
 import NavBar from '../../../components/NavBar/NavBar';
@@ -19,6 +19,7 @@ export default function Inbox() {
     const [selectedLesson, setSelectedLesson] = useState({});
     const [chosenClass, setChosenClass] = useState("");
     const [chosenUnit, setChosenUnit] = useState("");
+    const [standard, setStandard] = useState("");
 
 
     const SCIENCE = 1;
@@ -48,7 +49,6 @@ export default function Inbox() {
             await getClassrooms(classroomIds).then((classrooms) => {
               classrooms.forEach((classroom) => {
                 classroomMap.set(classroom.id, classroom);
-                console.log(classroom)
               });
             });
           } else {
@@ -67,6 +67,9 @@ export default function Inbox() {
       useEffect(() => {
         const dataBox = document.getElementById('inboxData');
         getMentor().then((res) => {
+          if (res.data.inbox.length == 0){
+            dataBox.innerHTML="<h1 className='empty-inbox'>You Have No shared Lessons at this time!</h1>"
+          }
           if (res.data && !printed) {
             dataBox.innerHTML = "";
             res.data.inbox.forEach((lesson) => {
@@ -99,6 +102,7 @@ export default function Inbox() {
             const grade = classroomMap.get(chosen).grade.id;
             selector.innerHTML="";
             selector.removeAttribute("disabled");
+                let first = true;
                   const fetchUnits = async () => {
                     try {
                       const res = await getUnits(grade);
@@ -110,6 +114,10 @@ export default function Inbox() {
                             optionElement.value = unit.id;
                             optionElement.text = unit.name;
                             selector.appendChild(optionElement);
+                            if(first){
+                              setChosenUnit(unit.id);
+                              first=false;
+                            }
                         }
                       } else {
                         message.error(res.err);
@@ -162,10 +170,24 @@ export default function Inbox() {
         setActivites([]);
         setActivePanel('panel-1');
       };
-    const handleSave = () => {
-        let unit = unitMap.get(chosenUnit);
-        discard();
-        message.success("Lesson Saved")
+    const handleSave = async () => {
+        if(chosenClass == "" || standard==""){
+          message.error("Not all options selected/filled in");
+        }
+        else{
+          let unit = unitMap.get(chosenUnit);
+          setStandard(selectedLesson.standards)
+
+          const res = await createLessonModule(selectedLesson.expectations, selectedLesson.name , selectedLesson.number+1, unit.id, standard, selectedLesson.link);
+          if(res){
+            discard();
+            message.success("Lesson Saved")
+
+          }
+          else{
+            message.error(res.error)
+          }
+        }
       };
 
     function saveTo(){
@@ -188,6 +210,10 @@ export default function Inbox() {
         message.error(res.error);
       }
         handleCancel();
+    }
+
+    const updateStandard = (e) =>{
+      setStandard(e.target.value)
     }
 
     const chooseClassroom  = (e) =>{
@@ -213,7 +239,6 @@ export default function Inbox() {
             </button>
             <h1 className='title'>Recently Shared with You</h1>
             <div id='inboxData'>
-
             </div>
             <Modal
                 title= {activePanel === 'panel-1'
@@ -250,15 +275,19 @@ export default function Inbox() {
                 <div className='saving-box'>
                     <div id='input'>
                         <h3>Classroom:</h3>
-                        <select name="" id="classOptions" onChange={chooseClassroom}>
+                        <select name="" id="classOptions" onChange={chooseClassroom} required>
                             <option value="0"></option>
                         </select>
                     </div>
                     <div id='input'>
                         <h3>Unit:</h3>
-                        <select name="" id="unitOptions" disabled='disabled' onChange={chooseUnit}>
+                        <select name="" id="unitOptions" disabled='disabled' onChange={chooseUnit} value={standard}>
                             <option value="0">Please select class</option>
                         </select>
+                    </div>
+                    <div id='input'>
+                      <h3>Set Standard:</h3>
+                      <input type="text" onChange={updateStandard} />
                     </div>
                 </div>
             </div>

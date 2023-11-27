@@ -1,16 +1,33 @@
 import { Modal, Button } from 'antd';
 import React, { useState } from 'react';
 import {
-  addStudent,  
+  addStudent,
+  getMentor,
+  getClassrooms,  
   getAllClassrooms
 } from '../../../../Utils/requests';
 
 export default function MoveStudent({ linkBtn, student, getFormattedDate, addStudentsToTable }) {
   const [visible, setVisible] = useState(false);
-  const [classList, setClassList] = useState([]);
+  //const [classList, setClassList] = useState([]);
+  const [classrooms, setClassrooms] = useState([]);
   const [studentData, setStudentData] = useState([]);
-    let allClassrooms = getAllClassrooms();
-    
+  let allClassrooms = getAllClassrooms();
+  let classIds = [];
+  
+  const setClassIds = () => {
+    /*getMentor().then((res) => {
+      if (res.data) {
+        res.data.classrooms.forEach((classroom) => {
+          classIds.push(classroom.id);
+        });
+      }
+    });*/
+    classIds = getClassrooms;
+    alert("getClassrooms.length is: " + getClassrooms.toString() + " and classIds.length: " + classIds.length);
+  };
+
+  
 
   const showModal = () => {
     setVisible(true);
@@ -20,13 +37,17 @@ export default function MoveStudent({ linkBtn, student, getFormattedDate, addStu
     setVisible(false);
   };
 
-  const handleAddStudent = async() => {
-    const student = await addStudent(
-      formattedName, chosenCharacter, classroomId
+  const handleMoveStudent = async(key) => {
+    //const oldStudent = studentData
+    
+    alert("moving student");
+
+    const newStudent = await addStudent(
+      student.name, student.character, classroomId
     )
 
     //add student to new classroom
-    addStudentsToTable([student.data])
+    addStudentsToTable([newStudent.data])
 
     //remove student from old classroom
     const dataSource = [...studentData];
@@ -71,7 +92,50 @@ export default function MoveStudent({ linkBtn, student, getFormattedDate, addStu
         <div>
           <div id='modal-card-content-container'>
               <p id='label'>Choose destination classroom:</p>
+              {setClassIds()}
+              
+
+
+
+
               <select
+                  id="classroom-dropdown-selector-id"
+                  name="classroom-dropdown-selector-name"
+                  onChange={e => handleMoveStudent(e.target.value)} /////here, how do I save the selected classroom?
+                  required
+              >
+                {classIds.map(class_ => (
+                <option key={class_.id} value={class_.id}>
+                    {class_.name}
+                </option>
+                ))}
+                <option>1</option>
+                <option>2</option>
+                {classrooms.map(class_ => (
+                <option key={class_.id} value={class_.id}>
+                    {class_.name}
+                </option>
+                ))}
+              </select>
+
+
+
+
+
+          </div>
+          <div id='modal-card-content-container'>
+            
+          </div>
+        </div>
+      </Modal>
+    </div>
+  );
+}
+
+
+/*
+
+<select
                   id="classroom-dropdown"
                   name="classroom"
                   onChange={e => setClassList(e.target.value)} /////here, how do I save the selected classroom?
@@ -83,12 +147,9 @@ export default function MoveStudent({ linkBtn, student, getFormattedDate, addStu
                       </option>
                   ))}
               </select>
-          </div>
-          <div id='modal-card-content-container'>
-            
-          </div>
-        </div>
-      </Modal>
-    </div>
-  );
-}
+
+
+
+res.data.classrooms
+
+*/

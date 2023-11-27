@@ -1,13 +1,16 @@
 import { Modal, Button } from 'antd';
 import React, { useState } from 'react';
 import {
-    getAllClassrooms
+  addStudent,  
+  getAllClassrooms
 } from '../../../../Utils/requests';
 
-export default function MoveStudent({ linkBtn, student, getFormattedDate }) {
+export default function MoveStudent({ linkBtn, student, getFormattedDate, addStudentsToTable }) {
   const [visible, setVisible] = useState(false);
   const [classList, setClassList] = useState([]);
+  const [studentData, setStudentData] = useState([]);
     let allClassrooms = getAllClassrooms();
+    
 
   const showModal = () => {
     setVisible(true);
@@ -16,6 +19,20 @@ export default function MoveStudent({ linkBtn, student, getFormattedDate }) {
   const handleCancel = () => {
     setVisible(false);
   };
+
+  const handleAddStudent = async() => {
+    const student = await addStudent(
+      formattedName, chosenCharacter, classroomId
+    )
+
+    //add student to new classroom
+    addStudentsToTable([student.data])
+
+    //remove student from old classroom
+    const dataSource = [...studentData];
+    setStudentData(dataSource.filter((item) => item.key !== key));
+  }
+
 
   //const handleCancel = () => {
   //  setVisible(false);
@@ -41,8 +58,8 @@ export default function MoveStudent({ linkBtn, student, getFormattedDate }) {
           <h1 id='student-card-title'>{"Move " + student.name + " to another class"}</h1>
         </div>
         <div id='description-container'>
-              <p id='label'>Current class:&nbsp;</p>
-              <p id='label-info'> {"NAME OF CLASSROOM"}</p>
+              <p id='label'>Current class&nbsp;</p>
+              <p id='label-info'> {""}</p>
               <br></br>
         </div>
         <div id='description-container'>

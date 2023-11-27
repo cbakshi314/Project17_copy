@@ -12,19 +12,23 @@ export default function MoveStudent({ linkBtn, student, getFormattedDate, addStu
   //const [classList, setClassList] = useState([]);
   const [classrooms, setClassrooms] = useState([]);
   const [studentData, setStudentData] = useState([]);
-  let allClassrooms = getAllClassrooms();
+  //let allClassrooms = getAllClassrooms();
   let classIds = [];
   
   const setClassIds = () => {
-    /*getMentor().then((res) => {
+    classIds = [];
+    getMentor().then((res) => {
       if (res.data) {
         res.data.classrooms.forEach((classroom) => {
           classIds.push(classroom.id);
         });
+        getClassrooms(classIds).then((classrooms) => {
+          setClassrooms(classrooms);
+        });
       }
-    });*/
-    classIds = getClassrooms;
-    alert("getClassrooms.length is: " + getClassrooms.toString() + " and classIds.length: " + classIds.length);
+    });
+    //classIds = getClassrooms;
+    
   };
 
   
@@ -43,7 +47,7 @@ export default function MoveStudent({ linkBtn, student, getFormattedDate, addStu
     alert("moving student");
 
     const newStudent = await addStudent(
-      student.name, student.character, classroomId
+      student.name, student.character, key
     )
 
     //add student to new classroom
@@ -101,17 +105,14 @@ export default function MoveStudent({ linkBtn, student, getFormattedDate, addStu
               <select
                   id="classroom-dropdown-selector-id"
                   name="classroom-dropdown-selector-name"
-                  onChange={e => handleMoveStudent(e.target.value)} /////here, how do I save the selected classroom?
+                  onChange={e => handleMoveStudent(e.target.value)}
+                  defaultValue={"noChange"}
                   required
-              >
-                {classIds.map(class_ => (
-                <option key={class_.id} value={class_.id}>
-                    {class_.name}
-                </option>
-                ))}
-                <option>1</option>
-                <option>2</option>
-                {classrooms.map(class_ => (
+              >    
+                <option key={0} value={"noChange"} id="disabled-option" disabled>
+                
+                </option>         
+                {classrooms.map((class_) => (
                 <option key={class_.id} value={class_.id}>
                     {class_.name}
                 </option>

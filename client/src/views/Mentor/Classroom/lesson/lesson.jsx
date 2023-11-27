@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { message } from "antd"
 import ActivityComponentTags from "../../../ContentCreator/ActivityEditor/components/ActivityComponentTags"
 import './lesson.less';
-import {getClassroom, getUnits, createLessonModule, getUnit} from '../../../../Utils/requests';
+import {getClassroom, getUnits, createLessonModule} from '../../../../Utils/requests';
 import MentorSubHeader from '../../../../components/MentorSubHeader/MentorSubHeader';
 
 const unitLayout = new Map();

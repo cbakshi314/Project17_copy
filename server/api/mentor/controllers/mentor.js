@@ -74,7 +74,7 @@ module.exports = {
     },
     async remove(ctx){
         const { id } = ctx.params;
-        console.log("Removing from inbox1");
+        console.log("Removing from inbox:");
       
         const { itemToRemove } = ctx.request.body;
       
@@ -93,10 +93,13 @@ module.exports = {
       
         // Retrieve the existing mentor data
         const existingMentor = await strapi.services.mentor.findOne({ id });
-      
-        // Remove the specified item from the inbox
-        const updatedInbox = existingMentor.inbox.filter(item => item != itemToRemove);
 
+        console.log(itemToRemove)
+      
+        // Remove the specified item.id from the inbox
+        const updatedInbox = existingMentor.inbox.filter(item => item.id !== itemToRemove.id);
+
+        console.log("Current inbox:")
         console.log(updatedInbox);
       
         // Update the mentor with the modified inbox

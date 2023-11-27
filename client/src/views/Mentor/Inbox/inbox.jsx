@@ -68,6 +68,7 @@ export default function Inbox() {
         const dataBox = document.getElementById('inboxData');
         getMentor().then((res) => {
           if (res.data && !printed) {
+            dataBox.innerHTML = "";
             res.data.inbox.forEach((lesson) => {
                 const box = document.createElement('div');
                 box.className = 'item';
@@ -87,7 +88,7 @@ export default function Inbox() {
             navigate('/teacherlogin');
           }
         });
-      }, []);
+      }, [printed]);
 
 // display possible Units to save to
       function updateUnits(chosen){
@@ -179,9 +180,9 @@ export default function Inbox() {
     const discard = async ()=>{
       const user = JSON.parse(sessionStorage.getItem('user'));
       const res = await removeLesson(user.id, selectedLesson);
+      const box = document.getElementsByName(`${selectedLesson.name}`)
       if(res){
         setprinted(false);
-        message.success();
       }
       else{
         message.error(res.error);

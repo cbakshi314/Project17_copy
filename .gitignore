@@ -35,4 +35,3 @@ server/public/client/*
 !server/public/client/.gitkeep
 
 client/package-lock.json
-.github/worflows/

@@ -683,3 +683,14 @@ export const getClassroomWorkspace = async (id) =>
     },
     error: 'Unable to send lesson',
   });
+
+  export const removeLesson = async (id, itemToRemove) =>
+  makeRequest({
+    method: PUT,
+    path: `${server}/mentors/remove/${id}`,
+    auth: true,
+    data: {
+      itemToRemove
+    },
+    error: 'Unable to remove lesson',
+  });

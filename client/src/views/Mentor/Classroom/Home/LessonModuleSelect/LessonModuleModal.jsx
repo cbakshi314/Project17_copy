@@ -1,6 +1,7 @@
 import { Modal, Button, message, Popconfirm } from 'antd';
 import React, { useEffect, useState } from 'react';
 import LessonModuleSelect from './LessonModuleSelect';
+import AddActivity from './AddActivity';
 import {
   getLessonModule,
   setSelection,
@@ -38,6 +39,15 @@ export default function LessonModuleModal({
   const [_, setSearchParams] = useSearchParams();
 
   const selector = document.getElementsByName('teacherSelector');
+  const [addActivityModalVisible, setAddActivityModalVisible] = useState(false);
+  const showAddActivityModal = () => {
+    setAddActivityModalVisible(true);
+  };
+
+  const handleAddActivityCancel = () => {
+    setAddActivityModalVisible(false);
+  };
+
 
 
   useEffect(() => {
@@ -276,7 +286,12 @@ export default function LessonModuleModal({
         />
       </Modal>
       {/* add avtivty button has not been implemented yet */}
-      <button id='add-activity'>+ Activity</button>
+      <button id='add-activity' onClick={showAddActivityModal}>+ Activity</button>
+      <AddActivity
+  visible={addActivityModalVisible}
+  onCancel={handleAddActivityCancel}
+  //setUpdatedActivities={setUpdatedActivities} // Pass any necessary props
+ />
       <Popconfirm
           title='This action is NOT reversible'
           onConfirm={handleDeleteConfirm}

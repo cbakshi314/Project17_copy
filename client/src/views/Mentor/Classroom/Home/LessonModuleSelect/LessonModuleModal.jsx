@@ -168,7 +168,7 @@ export default function LessonModuleModal({
             ? 'Share Lesson'
             : selected
         }
-        //visible={visible2}
+        visible={visible2}
         onCancel={handleCancel}
         footer={[
           <Button key='ok' type='primary' onClick={sendLesson}>

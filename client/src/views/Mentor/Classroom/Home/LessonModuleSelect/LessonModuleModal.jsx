@@ -7,6 +7,8 @@ import {
   setSelection,
   getLessonModuleActivities,
   deleteLessonModule,
+  getActivities,
+  deleteActivity,
   createActivity,
   getTeachers,
   shareLesson,
@@ -29,7 +31,10 @@ export default function LessonModuleModal({
   const [selectedTeacher, setSelectedTeacher] = useState(null);
   const [updated, setUpdated] = useState(false);
   const [selectedActivities, setSelectedActivities] = useState([]);
+  const [selectedActivity, setSelectedActivity] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
   const [selected, setSelected] = useState({});
+  const [popconfirmVisible, setPopconfirmVisible] = useState(false);
   // eslint-disable-next-line
   const [_, setSearchParams] = useSearchParams();
 
@@ -65,6 +70,27 @@ export default function LessonModuleModal({
     };
     fetchData();
   }, [viewing]);
+  
+
+  useEffect(() => {   //For deletion
+    const fetchData = async () => {
+      const activitiesRes = await getActivities();
+      if (activitiesRes.data) {                       //MAKE SURE TO CHANGE FOR ONLY LESSON ACTS
+        setSelectedActivities(activitiesRes.data);
+        setSelectedActivity(activitiesRes.data[0]);
+        setShowDropdown(true);
+      } else {
+        console.error('Error fetching activities');
+      }
+    };
+    fetchData();
+  }, []);
+
+ useEffect(() => {
+   console.log('Selected Activities:', selectedActivities);
+  }, [selectedActivities]);
+
+
 
   const fetchTeachers = async () => {
     const exclude = JSON.parse(sessionStorage.getItem('user'));
@@ -89,6 +115,14 @@ export default function LessonModuleModal({
     }
   };
 
+  const fetchAndSetActivities = async () => {
+    const activitiesRes = await getActivities();
+    if (activitiesRes.data) {
+      setSelectedActivities(activitiesRes.data);
+    } else {
+      console.error('Error fetching activities');
+    }
+  };
 
   const showModal = () => {
     setActivePanel('panel-1');
@@ -126,6 +160,26 @@ export default function LessonModuleModal({
     setActivePanel('panel-2');
   };
 
+  const handleActivitySelect = (selectedValue) => {
+    setSelectedActivity(selectedValue);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (selectedActivity) {
+      await delActivity();
+      setPopconfirmVisible(false);
+    }
+  };
+  const handleDeleteLessonClick = () => {
+    console.log("Popup should appear to delete");
+    setPopconfirmVisible(true);
+    
+  };
+
+  const handlePopconfirmCancel = () => {
+    setPopconfirmVisible(false);
+  };
+
 
   const sendLesson = async () => {
     const res = await shareLesson(selectedTeacher.id, activeLessonModule)
@@ -154,9 +208,21 @@ export default function LessonModuleModal({
     }
   };
   
-
+  const delActivity = async () =>{
+    console.log("delActivity is called");
+    if (selectedActivity) {
+      const res  = await deleteActivity(selectedActivity.id);
+      if(res.data){
+        message.success(`'${selectedActivity.id}' has been deleted`);
+        fetchAndSetActivities();
+      }
+      else {
+        message.error(`Could not delete '${selectedActivity.id}'`)
+      }
+    }
+  };
   const addActivity = async () =>{
-    const res = await createActivity
+    const res = await createActivity;
   }
 
   return (
@@ -215,6 +281,7 @@ export default function LessonModuleModal({
           setSelected={setSelected}
           gradeId={gradeId}
           activities={selectedActivities}
+          //selectedActivity={setSelectedActivity}
           setActivities={setSelectedActivities}
         />
       </Modal>
@@ -227,11 +294,41 @@ export default function LessonModuleModal({
  />
       <Popconfirm
           title='This action is NOT reversible'
-          onConfirm={() => { deleteLesson()
-              }}
+          onConfirm={handleDeleteConfirm}
+          onCancel={handlePopconfirmCancel}
+          visible={popconfirmVisible}
             >
-      <button id='delete-lesson'>Delete Lesson</button>
-      </Popconfirm>
+       <div>
+    <button id='delete-lesson' onClick={handleDeleteLessonClick}>
+      Delete Lesson
+    </button>
+
+    {/* Conditional rendering of the dropdown */}
+    {showDropdown && (
+      <div>
+        <p>Select an activity to delete:</p>
+        <select
+          name='activitySelector'
+          id='availableActivities'
+          onChange={(e) => {
+
+            const temp = selectedActivities.find(activity => activity.id === parseInt(e.target.value, 10));
+            // console.log('Selected value:', e.target.value);
+            // console.log('Selected temp: ', temp);
+            setSelectedActivity(temp);
+          }}
+          value={selectedActivity ? selectedActivity.id : ''}
+        >
+          {selectedActivities.map((activity) => (
+            <option key={activity.id} value={activity.id}>
+              {activity.id}
+            </option>
+          ))}
+        </select>
+      </div>
+    )}
+  </div>
+</Popconfirm>
     </div>
   );
 }

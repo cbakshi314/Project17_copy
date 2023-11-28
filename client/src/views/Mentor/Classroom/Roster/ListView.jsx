@@ -228,8 +228,8 @@ export default function ListView(props) {
         <MoveStudent
           student={record}
           linkBtn={true}
-          getFormattedDate={getFormattedDate}
-          addStudentsToTable={addStudentsToTable}
+          //getFormattedDate={getFormattedDate}
+          //addStudentsToTable={addStudentsToTable}
         />
       ),
     },

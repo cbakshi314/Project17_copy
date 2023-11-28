@@ -1,13 +1,15 @@
 import { Modal, Button } from 'antd';
 import React, { useState } from 'react';
+import { Form, message } from 'antd';
 import {
+  deleteStudent,
   addStudent,
   getMentor,
   getClassrooms,  
-  getAllClassrooms
+  //getAllClassrooms
 } from '../../../../Utils/requests';
 
-export default function MoveStudent({ linkBtn, student, getFormattedDate, addStudentsToTable }) {
+export default function MoveStudent({ linkBtn, student, handleDelete/*, getFormattedDate, addStudentsToTable */}) {
   const [visible, setVisible] = useState(false);
   //const [classList, setClassList] = useState([]);
   const [classrooms, setClassrooms] = useState([]);
@@ -41,22 +43,60 @@ export default function MoveStudent({ linkBtn, student, getFormattedDate, addStu
     setVisible(false);
   };
 
-  const handleMoveStudent = async(key) => {
+  //this function will move a student from the current class to the class specified in the argument "newClass"
+  const handleMoveStudent = async(newClass) => {
     //const oldStudent = studentData
     
-    alert("moving student");
+    //alert("moving student");
+
+    //remove student from old classroom
+    //const dataSource = [...studentData];
+    //setStudentData(dataSource.filter((item) => item.key !== student.key));
+    localDeleteStudent(student.key);
 
     const newStudent = await addStudent(
-      student.name, student.character, key
+      student.name, student.character, newClass
     )
 
     //add student to new classroom
-    addStudentsToTable([newStudent.data])
+    addStudentsToTable1([newStudent.data]);
 
-    //remove student from old classroom
+
+
+    message.success("Refresh page to view changes.");
+  }
+
+  //delete a student before moving the student
+  //will be called by handleMoveStudent
+  const localDeleteStudent = async (key) => {
     const dataSource = [...studentData];
     setStudentData(dataSource.filter((item) => item.key !== key));
-  }
+
+    const res = await deleteStudent(key);
+    /*if (res.data) {
+      message.success(`Successfully deleted student, ${res.data.name}.`);
+    } else {
+      message.error(res.err);
+    }*/
+  };
+
+
+  const addStudentsToTable1 = (students) => {
+    let newStudentData = [...studentData];
+    students.forEach((student) =>
+      newStudentData.push({
+        key: student.id,
+        name: student.name,
+        character: student.character,
+        enrolled: {
+          id: student.id,
+          enrolled: student.enrolled,
+        },
+        last_logged_in: student.last_logged_in,
+      })
+    );
+    setStudentData(newStudentData);
+  };
 
 
   //const handleCancel = () => {
@@ -83,7 +123,7 @@ export default function MoveStudent({ linkBtn, student, getFormattedDate, addStu
           <h1 id='student-card-title'>{"Move " + student.name + " to another class"}</h1>
         </div>
         <div id='description-container'>
-              <p id='label'>Current class&nbsp;</p>
+              <p id='label'>&nbsp;</p>
               <p id='label-info'> {""}</p>
               <br></br>
         </div>

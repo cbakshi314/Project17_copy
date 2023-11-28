@@ -6,8 +6,6 @@ import MoveStudent from './MoveStudent';
 import Picker from 'emoji-picker-react';
 
 export default function ListView(props) {
-  const {classroomId, addStudentsToTable} = props;
-
   const {
     studentData,
     handleDelete,
@@ -228,8 +226,7 @@ export default function ListView(props) {
         <MoveStudent
           student={record}
           linkBtn={true}
-          //getFormattedDate={getFormattedDate}
-          //addStudentsToTable={addStudentsToTable}
+          getFormattedDate={getFormattedDate}
         />
       ),
     },

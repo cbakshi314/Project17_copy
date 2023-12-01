@@ -5,40 +5,47 @@ import {
   deleteStudent,
   addStudent,
   getMentor,
-  getClassrooms,  
-  //getAllClassrooms
+  getClassrooms,
 } from '../../../../Utils/requests';
 
-export default function MoveStudent({ linkBtn, student, handleDelete/*, getFormattedDate, addStudentsToTable */}) {
+export default function MoveStudent({ linkBtn, student, handleDelete/*, classIds*/}) {
   const [visible, setVisible] = useState(false);
-  //const [classList, setClassList] = useState([]);
   const [classrooms, setClassrooms] = useState([]);
   const [studentData, setStudentData] = useState([]);
-  //let allClassrooms = getAllClassrooms();
   let classIds = [];
+  let classIdsSet = false;
   
+
+
+  //retrieves information on what classes are available as destinations for the student
   const setClassIds = () => {
-    classIds = [];
-    getMentor().then((res) => {
-      if (res.data) {
-        res.data.classrooms.forEach((classroom) => {
-          classIds.push(classroom.id);
-        });
-        getClassrooms(classIds).then((classrooms) => {
-          setClassrooms(classrooms);
-        });
-      }
-    });
-    //classIds = getClassrooms;
+    if(!classIdsSet){
+      //alert("Setting class ids...");
+      classIds = [];
+      getMentor().then((res) => {
+        if (res.data) {
+          res.data.classrooms.forEach((classroom) => {
+            classIds.push(classroom.id);
+          });
+          getClassrooms(classIds).then((classrooms) => {
+            setClassrooms(classrooms);
+          });
+        }
+      });
+      classIdsSet = true;
+    }
     
   };
 
   
-
+  //display move box
   const showModal = () => {
     setVisible(true);
+    setClassIds();
   };
 
+  //cancel moving
+  //closes the modal
   const handleCancel = () => {
     setVisible(false);
   };
@@ -50,8 +57,6 @@ export default function MoveStudent({ linkBtn, student, handleDelete/*, getForma
     //alert("moving student");
 
     //remove student from old classroom
-    //const dataSource = [...studentData];
-    //setStudentData(dataSource.filter((item) => item.key !== student.key));
     localDeleteStudent(student.key);
 
     const newStudent = await addStudent(
@@ -73,11 +78,6 @@ export default function MoveStudent({ linkBtn, student, handleDelete/*, getForma
     setStudentData(dataSource.filter((item) => item.key !== key));
 
     const res = await deleteStudent(key);
-    /*if (res.data) {
-      message.success(`Successfully deleted student, ${res.data.name}.`);
-    } else {
-      message.error(res.err);
-    }*/
   };
 
 
@@ -98,10 +98,6 @@ export default function MoveStudent({ linkBtn, student, handleDelete/*, getForma
     setStudentData(newStudentData);
   };
 
-
-  //const handleCancel = () => {
-  //  setVisible(false);
-  //};
 
   return (
     <div>
@@ -136,7 +132,7 @@ export default function MoveStudent({ linkBtn, student, handleDelete/*, getForma
         <div>
           <div id='modal-card-content-container'>
               <p id='label'>Choose destination classroom:</p>
-              {setClassIds()}
+              {}
               
 
 
@@ -174,24 +170,3 @@ export default function MoveStudent({ linkBtn, student, handleDelete/*, getForma
   );
 }
 
-
-/*
-
-<select
-                  id="classroom-dropdown"
-                  name="classroom"
-                  onChange={e => setClassList(e.target.value)} /////here, how do I save the selected classroom?
-                  required
-              >
-                  {allClassrooms.map(class_ => (
-                      <option key={class_.id} value={class_.id}>
-                          {class_.name}
-                      </option>
-                  ))}
-              </select>
-
-
-
-res.data.classrooms
-
-*/

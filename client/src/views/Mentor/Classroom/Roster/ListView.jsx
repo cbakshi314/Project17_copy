@@ -5,7 +5,7 @@ import StudentModal from './StudentModal';
 import MoveStudent from './MoveStudent';
 import Picker from 'emoji-picker-react';
 
-export default function ListView(props) {
+export default function ListView(props, classIds) {
   const {classroomId, addStudentsToTable} = props;
 
   const {
@@ -228,6 +228,7 @@ export default function ListView(props) {
         <MoveStudent
           student={record}
           linkBtn={true}
+          //classIds={classIds}
           //getFormattedDate={getFormattedDate}
           //addStudentsToTable={addStudentsToTable}
         />

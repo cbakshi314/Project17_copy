@@ -56,7 +56,7 @@ export default function Classroom({
         <TabPane tab='Create lesson' key='lesson'>
           <Lesson classroomId={id}/>
         </TabPane>
-        <TabPane tab='Create Unit' key='unit'>
+        <TabPane tab='Unit Handling' key='unit'>
           <Unit classroomId={id}/>
         </TabPane>
       </Tabs>

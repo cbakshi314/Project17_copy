@@ -60,26 +60,27 @@ h3{
     padding-inline: 8px;
 }
 
-#c_lesson form .deletebtn{
-    margin-top: 20px;
-    width: 10%;
+#c_lesson .deletebtn{
+    width: 15%;
     text-align: center;
-    border-radius: 10px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
     border: 1px solid transparent;
     background-color: rgb(205, 6, 6);
     color: white;
     font-size: 20px;
     transition: 300ms;
-    margin-bottom: 10px;
-    box-shadow: 0px 0px 6px black;
+    margin-bottom: 30px;
+    box-shadow: 0px 2px 6px black;
     cursor: pointer;
-    
-    position: absolute;
-    right: 13%;
-    top: 15%;
+    display: flex;
+    position: relative;
+    margin-top: -50px;
+    margin-inline:auto;
+    justify-content: center;
 
     &:hover{
-        width: 12%;
+        width: 18%;
         box-shadow: 0px 0px 3px black;
     }
 }

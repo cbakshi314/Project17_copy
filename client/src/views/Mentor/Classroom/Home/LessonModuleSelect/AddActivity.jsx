@@ -4,6 +4,7 @@ import { createActivity } from '../../../../../Utils/requests';
 import ActivityComponentTags from "../../../../ContentCreator/ActivityEditor/components/ActivityComponentTags";
 import './AddActivity.css';
 
+//on cancel clear forms
 const resetFormFields = (
     setActivityName,
     setDescription,
@@ -22,6 +23,7 @@ const resetFormFields = (
     setArduinoComponents([]);
   };
 
+  //all the fields of an activity
 const AddActivity = ({ visible, onCancel, setUpdatedActivities }) => {
   const [activityName, setActivityName] = useState('');
   const [descriptionName, setDescription] = useState('');
@@ -30,6 +32,7 @@ const AddActivity = ({ visible, onCancel, setUpdatedActivities }) => {
   const [classroomMaterialsTag, setClassroomMaterials] = useState([]);
   const [studentMaterialsTag, setStudentMaterials] = useState([]);
   const [arduinoComponentsTag, setArduinoComponents] = useState([]);
+  //add more if needed
 
   const handleOk = async () => {
     // Check if required fields are filled
@@ -48,7 +51,7 @@ const AddActivity = ({ visible, onCancel, setUpdatedActivities }) => {
       arduinoComponents: arduinoComponentsTag,
     });
 
-    if (res.data) {
+    if (res.data) { //successful creation
       message.success(`Activity '${activityName}' created successfully`);
       setUpdatedActivities(true);
       onCancel();

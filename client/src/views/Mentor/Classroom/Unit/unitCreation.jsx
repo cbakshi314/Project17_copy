@@ -44,13 +44,7 @@ export default function unitCreation({ classroomId }) {
                   console.log(unit);
                   unitLayout.set(unit.name, unit);
                 }
-                      // Add a test unit
-                // const testUnit = {
-                //   id: 'test-id',
-                //   name: 'Test Unit',
-                //   // Add other properties as needed
-                // };
-                // unitLayout.set(testUnit.name, testUnit);
+
               } else {
                 message.error(res.err);
               }
@@ -115,6 +109,16 @@ export default function unitCreation({ classroomId }) {
         title={'Create Unit'}
       />
       <div id='c_lesson'>
+      <button className="deletebtn" onClick={handleDeleteUnitClick}>
+          Delete Unit
+        </button>
+        <UnitListModal
+          visible={showUnitList}
+          onCancel={() => setShowUnitList(false)}
+          units={Array.from(unitLayout.values())} // Convert Map values to an array
+          onUnitSelect={handleUnitSelect}
+          selectedUnits={selectedUnits}
+        />
         <h3>Create Unit for <strong>{classroom.name}</strong></h3>
         <hr />
       <form onSubmit={handleSubmit}>
@@ -135,16 +139,6 @@ export default function unitCreation({ classroomId }) {
             <input className='textbox' type="number" onChange={updateNumber} value={number} required/>
         </div>
         <input className='submitbtn' type="submit" value={"Create Unit "} />
-        <button className="deletebtn" onClick={handleDeleteUnitClick}>
-          Delete Unit
-        </button>
-        <UnitListModal
-          visible={showUnitList}
-          onCancel={() => setShowUnitList(false)}
-          units={Array.from(unitLayout.values())} // Convert Map values to an array
-          onUnitSelect={handleUnitSelect}
-          selectedUnits={selectedUnits}
-        />
 
         </form>
       </div>

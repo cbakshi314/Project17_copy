@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getMentor, getLessonModuleActivities, getClassrooms, getUnits, removeLesson, createLessonModule} from '../../../Utils/requests';
+import { getMentor, getLessonModuleActivities, getClassrooms, getUnits, removeLesson, createLessonModule, createActivity, updateActivityDetails} from '../../../Utils/requests';
 import { Modal, Button, message, Popconfirm, Tabs, Tag } from 'antd';
 import '../Dashboard/Dashboard.less'
 import NavBar from '../../../components/NavBar/NavBar';
@@ -178,15 +178,53 @@ export default function Inbox() {
           let unit = unitMap.get(chosenUnit);
           setStandard(selectedLesson.standards)
 
-          const res = await createLessonModule(selectedLesson.expectations, selectedLesson.name , selectedLesson.number+1, unit.id, standard, selectedLesson.link);
-          if(res){
-            discard();
-            message.success("Lesson Saved")
-
+          const activities = await getLessonModuleActivities(selectedLesson.id);
+          if(!activities){
+            message.error("Error retriving activities");
+            return
           }
-          else{
+          
+          let activityList = activities.data;
+          const lesson = await createLessonModule(selectedLesson.expectations, selectedLesson.name , selectedLesson.number+1, unit.id, standard, selectedLesson.link);
+          if(!lesson){
             message.error(res.error)
+            return;
           }
+
+          for(let x in activityList){
+            const res = await createActivity(activityList[x].number, lesson.data);
+            const activity  = res.data;
+            if(!res){
+              message.error("request failed");
+              return;
+            }
+
+            let comComponent = [];
+            let scieCompoent = [];
+            let makeComponent = [];
+
+            const learnComp = activityList[x].learning_components;
+
+            for(let y in learnComp){
+              if(learnComp[y].learning_component_type == 1){
+                comComponent.push(learnComp[y].type);
+              }
+              else if(learnComp[y].learning_component_type == 2){
+                scieCompoent.push(learnComp[y].type);
+              }
+              else if(learnComp[y].learning_component_type == 3){
+                makeComponent.push(learnComp[y].type);
+              }
+              console.log(comComponent);
+              console.log(scieCompoent);
+              console.log(makeComponent);
+
+            }
+            const finale = await updateActivityDetails(activity.id, activityList[x].description, activityList[x].StandardS, activityList[x].images, activityList[x].link, scieCompoent, makeComponent, comComponent)
+          }
+
+          discard();
+          message.success("Lesson Saved")
         }
       };
 
@@ -281,7 +319,7 @@ export default function Inbox() {
                     </div>
                     <div id='input'>
                         <h3>Unit:</h3>
-                        <select name="" id="unitOptions" disabled='disabled' onChange={chooseUnit} value={standard}>
+                        <select name="" id="unitOptions" disabled='disabled' onChange={chooseUnit} value={chosenUnit}>
                             <option value="0">Please select class</option>
                         </select>
                     </div>

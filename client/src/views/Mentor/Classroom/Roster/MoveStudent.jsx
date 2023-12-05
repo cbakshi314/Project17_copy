@@ -99,6 +99,7 @@ export default function MoveStudent({ linkBtn, student, handleDelete/*, classIds
   };
 
 
+
   return (
     <div>
       <button id={linkBtn ? 'link-btn' : null} onClick={showModal}>
@@ -119,12 +120,12 @@ export default function MoveStudent({ linkBtn, student, handleDelete/*, classIds
           <h1 id='student-card-title'>{"Move " + student.name + " to another class"}</h1>
         </div>
         <div id='description-container'>
-              <p id='label'>&nbsp;</p>
-              <p id='label-info'> {""}</p>
+              <p id='label'>Current class:</p>
+              <p id='label-info'> {"NAME OF CLASSROOM"}</p>
               <br></br>
         </div>
         <div id='description-container'>
-          <p id='label'>Status:&nbsp;</p>
+          <p id='label'>Status:</p>
           <p id='label-info'>
             {student.enrolled.enrolled ? 'Enrolled' : 'Unenrolled'}
           </p>
@@ -160,6 +161,7 @@ export default function MoveStudent({ linkBtn, student, handleDelete/*, classIds
 
 
 
+
           </div>
           <div id='modal-card-content-container'>
             
@@ -169,4 +171,3 @@ export default function MoveStudent({ linkBtn, student, handleDelete/*, classIds
     </div>
   );
 }
-

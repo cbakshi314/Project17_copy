@@ -30,12 +30,18 @@ h3{
     display: grid;
     grid-template-columns: auto auto;
     width: fit-content;
+    justify-content: center;
     gap: 20px;
     text-align: center;
     margin: auto;
 }
 
 #c_lesson form .fst h4{
+    margin: auto;
+    font-size: 20px;
+}
+
+.fst #units{
     margin: auto;
     font-size: 20px;
 }
@@ -55,9 +61,10 @@ h3{
     min-width: 500px;
 }
 
-#c_lesson form .submitbtn, #c_lesson form .submitbtn::before{
+#c_lesson form .submitbtn{
     margin-top: 20px;
     width: fit-content;
+    text-align: center;
     border-radius: 10px;
     border: 1px solid transparent;
     background-color: rgb(98, 172, 222);
@@ -65,34 +72,44 @@ h3{
     font-size: 20px;
     margin-top: 30px;
     margin-inline: auto;
-    animation: btnout forwards 400ms;
-}
+    transition: 300ms;
+    margin-bottom: 10px;
+    box-shadow: 0px 0px 6px black;
+    cursor: pointer;
 
-#c_lesson form .submitbtn:hover{
-    animation: btn forwards 400ms;
-}
-
-@keyframes btn{
-    0%{
-        padding-inline: 10px;
-        padding-block: 0px;
-        margin-bottom: 10px;
-    }
-    100%{
+    &:hover{
         padding-inline: 20px;
-        padding-block: 5px;
-
+        box-shadow: 0px 0px 3px black;
     }
 }
-@keyframes btnout{
-    0%{
-        padding-inline: 20px;
-        padding-block: 5px;
-    }
-    100%{
-        margin-bottom: 10px;
-        padding-inline: 10px;
-        padding-block: 0px;
+
+.selection h4{
+    font-size: 20px;
+    display: flex;
+    margin: auto;
+}
+
+.selection #units{
+    appearance: none;
+    /*  safari  */
+    -webkit-appearance: none;
+    /*  other styles for aesthetics */
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    width: 100%;
+    color:white;
+    font-weight: 600;
+    font-size: 1.15rem;
+    padding-inline:10px;
+    padding-block: 5px;
+    background-color: rgba(98, 172, 222, 0.777);
+    border: none;
+    box-shadow: 0px 0px 5px black;
+    border-radius: 0.25rem;
+    cursor: pointer;
+
+    &:focus{
+        outline:none;
+        border: 2px solid white;
     }
 }
 

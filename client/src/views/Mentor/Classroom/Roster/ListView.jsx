@@ -231,6 +231,7 @@ export default function ListView(props, classIds) {
           //classIds={classIds}
           //getFormattedDate={getFormattedDate}
           //addStudentsToTable={addStudentsToTable}
+
         />
       ),
     },

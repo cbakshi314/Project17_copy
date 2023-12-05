@@ -150,7 +150,6 @@ const MentorActivityDetailModal = ({
 };
   return (
     <div id="mentoredit">
-    <Button>Remove</Button>
     <Button id="view-activity-button"
     onClick={showModal} style={{width: '40px',marginRight: "auto"}} >
 <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"

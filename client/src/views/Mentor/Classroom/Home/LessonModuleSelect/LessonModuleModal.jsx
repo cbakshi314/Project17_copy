@@ -43,8 +43,6 @@ export default function LessonModuleModal({
     setAddActivityModalVisible(false);
   };
 
-
-
   useEffect(() => {
     const fetchData = async () => {
       if (viewing) {

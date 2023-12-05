@@ -4,6 +4,7 @@ import {
   getClassroom,
   getLessonModule,
   getLessonModuleActivities,
+  deleteActivity,
 } from '../../../../Utils/requests';
 import MentorSubHeader from '../../../../components/MentorSubHeader/MentorSubHeader';
 import '../../Dashboard/Dashboard.less'
@@ -18,7 +19,11 @@ export default function Home({ classroomId, viewing }) {
   const [activities, setActivities] = useState([]);
   const [gradeId, setGradeId] = useState(null);
   const [activeLessonModule, setActiveLessonModule] = useState(null);
+  const [forceRender, setForceRender] = useState(false);
+  const [display, setDisplay] = useState(false);
+
   const navigate = useNavigate();
+  
 
   const SCIENCE = 1;
   const MAKING = 2;
@@ -39,6 +44,7 @@ export default function Home({ classroomId, viewing }) {
             if (lsRes.data) setActiveLessonModule(lsRes.data);
             else {
               message.error(lsRes.err);
+              setDisplay(false);
             }
             const activityRes = await getLessonModuleActivities(lsRes.data.id);
             if (activityRes) setActivities(activityRes.data);
@@ -73,6 +79,30 @@ export default function Home({ classroomId, viewing }) {
   const handleBack = () => {
     navigate('/dashboard');
   };
+
+  const removeAcitivty = async (selectedAct) => {
+    const newActivities = activities;
+
+    var i = newActivities.length;
+
+    while(i--){
+
+      if(activities[i].id == selectedAct.id){
+        newActivities.splice(i, 1);
+        break;
+
+      }
+    }
+
+    setActivities(newActivities);
+
+    const res = await deleteActivity(selectedAct.id);
+    if(res){
+      message.success("Activity Deleted");
+      setForceRender((prev) => !prev);
+
+    }
+  }
 
   const color = [
     'magenta',
@@ -155,6 +185,7 @@ export default function Home({ classroomId, viewing }) {
                             Demo Template
                           </button>
                         )}
+                        <button className='removal-btn' onClick={() => removeAcitivty(activity)}>Remove</button>
                         <MentorActivityDetailModal
                           learningStandard={activeLessonModule}
                           selectActivity={activity}

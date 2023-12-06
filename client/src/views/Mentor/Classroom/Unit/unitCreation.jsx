@@ -24,7 +24,6 @@ export default function unitCreation({ classroomId }) {
           if (res.data) {
             const classroom = res.data;
             setClassroom(classroom);
-            console.log(classroom)
           } else {
             message.error(res.err);
           }
@@ -59,7 +58,6 @@ export default function unitCreation({ classroomId }) {
 
       const handleUnitSelect = (selectedUnit) => {
         // Handle the selected unit, for example, remove it from the list
-        console.log('Selected Unit:', selectedUnits);
         setSelectedUnits((prevSelected) => prevSelected.filter((unit) => unit !== selectedUnits));
       };
       const handleDeleteUnitClick = () => {
@@ -81,13 +79,20 @@ export default function unitCreation({ classroomId }) {
         if (/^-?\d*$/.test(input)) {
           setNumber(input);
         }
-    
+      }
+
+      function clearForm(){
+        setNumber(1);
+        setNewUnitName("");
+        setStandardID("");
+        setstandardDescription("");
       }
 
       const handleSubmit = async (e) =>{
         e.preventDefault();
-        if(unitValue != ""){
-          const res = await createUnit(number, newUnitName, standardsID, standardsDescrip, classroom.grade.name) 
+        const gradeLevel = classroom.grade.name;
+        if(number >= 1){
+          const res = await createUnit(number, newUnitName, standardID, standardDescription, classroom.grade.id);
           if(res.data){
             message.success(`Unit "${newUnitName}" was successfuly created`);
   

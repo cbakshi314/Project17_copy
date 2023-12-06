@@ -694,3 +694,11 @@ export const getClassroomWorkspace = async (id) =>
     },
     error: 'Unable to remove lesson',
   });
+
+  export const deleteUnit = async (id)  =>
+  makeRequest({
+    method:DELETE,
+    path: `${server}/units/${id}`,
+    auth:true,
+    error: 'Unable to delete Unit'
+  })

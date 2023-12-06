@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Button } from 'antd';
+import { Modal, Button, message } from 'antd';
+import {deleteUnit} from '../../../../Utils/requests';
 
 const UnitListModal = ({ visible, onCancel, units, onUnitSelect, selectedUnits }) => {
 
@@ -26,10 +27,14 @@ const UnitListModal = ({ visible, onCancel, units, onUnitSelect, selectedUnits }
     setConfirmationVisible(true);
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     setConfirmationVisible(false);
     if (selectedUnitToDelete) {
       const updatedSelectedUnits = localSelectedUnits.filter(unit => unit !== selectedUnitToDelete);
+      const res = await deleteUnit(selectedUnitToDelete.id);
+      if(res){
+        message.success(`'${selectedUnitToDelete.name}' has been deleted`)
+      }
       setLocalSelectedUnits(updatedSelectedUnits);
       onUnitSelect && onUnitSelect(updatedSelectedUnits); // Notify parent component about the selected units
     }
@@ -42,19 +47,15 @@ const UnitListModal = ({ visible, onCancel, units, onUnitSelect, selectedUnits }
 
   return (
     <Modal
-      title="Unit List"
+      title="Select Unit to Remove"
       visible={visible}
       onCancel={onCancel}
-      footer={[
-        <button key="cancel" onClick={onCancel}>
-          Close
-        </button>,
-      ]}
+      footer={[]}
     >
-      <ul>
+      <ul className='all-units'>
         {units.map((unit) => (
           <li key={unit.id}>
-            <button onClick={() => showConfirmation(unit)} style={{ marginTop: 18 }}>
+            <button className='unit-selection' onClick={() => showConfirmation(unit)}>
               {unit.name}
             </button>
           </li>
